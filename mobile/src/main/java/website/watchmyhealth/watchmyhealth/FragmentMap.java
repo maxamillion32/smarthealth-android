@@ -1,5 +1,8 @@
 package website.watchmyhealth.watchmyhealth;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -50,8 +53,10 @@ public class FragmentMap extends Fragment implements LocationListener {
         map = mapView.getMap();
         map.getUiSettings().setMyLocationButtonEnabled(true);//false de base
         map.setMyLocationEnabled(true);
-       // lm = (LocationManager) this.getActivity().getSystemService(this.getActivity().LOCATION_SERVICE);
-        //lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 20000, 0, this);
+        lm = (LocationManager) this.getActivity().getSystemService(this.getActivity().LOCATION_SERVICE);
+        if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            createGpsDisabledAlert();
+        }
         // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
         MapsInitializer.initialize(this.getActivity());
         return v;
@@ -152,5 +157,29 @@ public class FragmentMap extends Fragment implements LocationListener {
     public void onProviderDisabled(String s) {
         String msg = String.format(getResources().getString(R.string.provider_disabled), s);
         Toast.makeText(this.getActivity().getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+    private void createGpsDisabledAlert() {
+        AlertDialog.Builder localBuilder = new AlertDialog.Builder(this.getActivity());
+        localBuilder.setMessage("Le GPS est inactif, voulez-vous l'activer ?").setCancelable(false).setPositiveButton("Activer GPS ",
+                new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                                FragmentMap.this.showGpsOptions();
+                            }
+                        }
+                );
+        localBuilder.setNegativeButton("Ne pas l'activer ",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                        paramDialogInterface.cancel();
+                        FragmentMap.this.getActivity().finish();
+                    }
+                }
+        );
+        localBuilder.create().show();
+    }
+
+    private void showGpsOptions() {
+        startActivity(new Intent("android.settings.LOCATION_SOURCE_SETTINGS"));
+        this.getActivity().finish();
     }
 }

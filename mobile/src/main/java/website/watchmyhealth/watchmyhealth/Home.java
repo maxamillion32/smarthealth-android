@@ -76,7 +76,7 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
                 mTitle = getString(R.string.title_section2);
                 break;
         }
-        fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.container, fragment).addToBackStack("tag").commit();
 
     }
 
