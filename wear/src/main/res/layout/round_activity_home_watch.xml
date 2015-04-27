@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context=".HomeWatch" tools:deviceIds="wear_round"
+    android:background="#ff3399ff">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/stepCount"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold"
+        android:textSize="50dp"
+        android:textIsSelectable="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:autoText="false"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_marginTop="50dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold"
+        android:text="StepS"
+        android:textSize="50dp"
+        android:textIsSelectable="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:autoText="false"
+        android:gravity="center_horizontal"
+        android:textAlignment="gravity"
+        android:layout_marginTop="25dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/stepDetect"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/heart"
+        android:layout_above="@+id/stepDetect"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="18dp" />
+</RelativeLayout>
