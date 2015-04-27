@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Project Smart Health</string>
+    <string name="app_name">Watch My Health</string>
     <string name="title_section1">Accueil</string>
     <string name="title_section2">Votre map</string>
     <string name="title_section3">Section 3</string>
@@ -13,5 +13,8 @@
     <string name="provider_disabled">Le %s est désactivé</string>
     <string name="provider_new_status">The provider %1$s has now a new status %2$s</string>
     <string name="new_location">Nouvelle position: Latitude = %1$s, Longitude = %2$s, Altitude = %3$s avec une précision de %4$s mètres</string>
+    <string name="title_activity_login">LoginActivity</string>
+
+    <string name="hello_world">Hello world!</string>
 
 </resources>
