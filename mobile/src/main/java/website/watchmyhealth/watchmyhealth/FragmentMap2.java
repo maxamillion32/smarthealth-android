@@ -14,8 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -30,7 +28,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
  * Created by Yoann on 26/04/2015.
  */
 
-public class FragmentMap extends Fragment implements LocationListener {
+public class FragmentMap2 extends Fragment implements LocationListener {
 
     private GoogleMap map;
     private MapView mapView;
@@ -110,16 +108,17 @@ public class FragmentMap extends Fragment implements LocationListener {
     @Override
     public void onPause() {
         super.onPause();
-        mapView.onPause();
+
         cameraPosition = map.getCameraPosition();
         map = null;
-        lm.removeUpdates(this);
+        //lm.removeUpdates(this);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+//        mapView.onDestroy();
+//    }
 
     @Override
     public void onLowMemory() {
@@ -133,10 +132,15 @@ public class FragmentMap extends Fragment implements LocationListener {
         longitude = location.getLongitude();
         positionUser= new LatLng(latitude,longitude);
             System.out.println("onLocationChanged -> bMoveCamera");
-            //markerUser = map.addMarker(new MarkerOptions().position(positionUser).title("fabrice126").snippet("Salut les gars !").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_img_profil)));
+            markerUser = map.addMarker(new MarkerOptions().position(positionUser).title("fabrice126").snippet("Salut les gars !").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_img_profil)));
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(positionUser, 17));
+            Toast.makeText(this.getActivity(), "onLocationChanged bMoveCamera", Toast.LENGTH_SHORT).show();
 
-        map.moveCamera(CameraUpdateFactory.newLatLng(positionUser));
+            map.animateCamera(CameraUpdateFactory.newLatLng(positionUser));
+            markerUser.setPosition(positionUser);
+
+
+        //map.moveCamera(CameraUpdateFactory.newLatLng(positionUser));
     }
 
     @Override
@@ -173,7 +177,7 @@ public class FragmentMap extends Fragment implements LocationListener {
         localBuilder.setMessage("Le GPS est inactif, voulez-vous l'activer ?").setCancelable(false).setPositiveButton("Activer GPS ",
                 new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                                FragmentMap.this.showGpsOptions();
+                                FragmentMap2.this.showGpsOptions();
                             }
                         }
                 );
@@ -181,7 +185,7 @@ public class FragmentMap extends Fragment implements LocationListener {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface paramDialogInterface, int paramInt) {
                         paramDialogInterface.cancel();
-                        FragmentMap.this.getActivity().finish();
+                        FragmentMap2.this.getActivity().finish();
                     }
                 }
         );

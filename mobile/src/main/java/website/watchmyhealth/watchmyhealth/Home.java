@@ -3,6 +3,7 @@ package website.watchmyhealth.watchmyhealth;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -59,7 +60,7 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         // update the main content by replacing fragments
         Fragment fragment = (Fragment)new FragmentTest();
         FragmentManager fragmentManager = getSupportFragmentManager();
-
+        FragmentActivity fragmentActivity;
         //fragmentManager.beginTransaction()
         //.replace(R.id.container, PlaceholderFragment.newInstance(position + 1)).commit();
         switch (position) {
@@ -69,11 +70,11 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
                 break;
             case 1:
                 fragment = new FragmentTest2();
-                mTitle = getString(R.string.title_section3);
+                mTitle = getString(R.string.title_section2);
                 break;
             case 2:
                 fragment = new FragmentMap();
-                mTitle = getString(R.string.title_section2);
+                mTitle = getString(R.string.title_section3);
                 break;
         }
         fragmentManager.beginTransaction().replace(R.id.container, fragment).addToBackStack("tag").commit();
