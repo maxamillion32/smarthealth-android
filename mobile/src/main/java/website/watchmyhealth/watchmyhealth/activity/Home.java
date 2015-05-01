@@ -1,6 +1,7 @@
 package website.watchmyhealth.watchmyhealth.activity;
 
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -8,6 +9,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+<<<<<<< HEAD:mobile/src/main/java/website/watchmyhealth/watchmyhealth/activity/Home.java
+=======
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Chronometer;
+>>>>>>> f523b7d9c7fbf52885dcac91472c648dd52cfd84:mobile/src/main/java/website/watchmyhealth/watchmyhealth/Home.java
 
 import website.watchmyhealth.watchmyhealth.NavigationDrawerFragment;
 import website.watchmyhealth.watchmyhealth.R;
@@ -135,6 +142,24 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         return super.onOptionsItemSelected(item);
     }
 
+
+    long timeWhenStopped = 0;
+
+    public void startChronometer(View view) {
+        ((Chronometer) findViewById(R.id.chronometer1)).setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
+        ((Chronometer) findViewById(R.id.chronometer1)).start();
+
+    }
+
+    public void stopChronometer(View view) {
+        timeWhenStopped = ((Chronometer) findViewById(R.id.chronometer1)).getBase() - SystemClock.elapsedRealtime();
+        ((Chronometer) findViewById(R.id.chronometer1)).stop();
+    }
+
+    public void resetChronometer(View view) {
+        ((Chronometer) findViewById(R.id.chronometer1)).setBase(SystemClock.elapsedRealtime());
+        timeWhenStopped = 0;
+    }
     /**
      * A placeholder fragment containing a simple view.
      */
