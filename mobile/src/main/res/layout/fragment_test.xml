@@ -1,39 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:weightSum="1">
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"
-        android:transitionGroup="false"
-        android:background="#ffff1b8a">
+        android:layout_height="wrap_content"
+        android:layout_weight="0.25">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="FragmentTest"
-            android:id="@+id/textView"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="194dp"
+            android:layout_height="match_parent"
+            android:weightSum="1">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Button Fragment Test"
-            android:id="@+id/button"
-            android:layout_above="@+id/textView"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="100dp" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="106dp"
+                android:layout_height="66dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/stepCount"
-            android:layout_alignParentBottom="false"
-            android:layout_centerInParent="true" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Durée"
+                    android:id="@+id/textView"
+                    android:textSize="25dp"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginLeft="25dp" />
+            </LinearLayout>
 
+            <Chronometer
+                android:id="@+id/chronometer1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textSize="35dp"
+                android:layout_marginTop="60dp"
+                android:layout_marginLeft="-75dp" />
 
-    </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="194dp"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.25" >
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="194dp"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="194dp"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.25" >
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="194dp"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="194dp"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.25" >
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="194dp"
+            android:layout_height="match_parent"
+            android:id="@+id/layou"
+            android:weightSum="1"
+            android:gravity="center_vertical|center_horizontal">
+
+            <ImageButton
+                android:id="@+id/button1"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:text="Start"
+                android:onClick="startChronometer"
+                android:src="@drawable/play_icon"
+                android:contentDescription="ok" />
+
+            <ImageButton
+                android:id="@+id/button2"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:text="Stop"
+                android:onClick="stopChronometer"
+                android:src="@drawable/stop_icon"
+                android:layout_marginLeft="15dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="194dp"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
 </LinearLayout>

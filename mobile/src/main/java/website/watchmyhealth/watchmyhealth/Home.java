@@ -2,6 +2,7 @@ package website.watchmyhealth.watchmyhealth;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -12,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Chronometer;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -146,6 +148,24 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         return super.onOptionsItemSelected(item);
     }
 
+
+    long timeWhenStopped = 0;
+
+    public void startChronometer(View view) {
+        ((Chronometer) findViewById(R.id.chronometer1)).setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
+        ((Chronometer) findViewById(R.id.chronometer1)).start();
+
+    }
+
+    public void stopChronometer(View view) {
+        timeWhenStopped = ((Chronometer) findViewById(R.id.chronometer1)).getBase() - SystemClock.elapsedRealtime();
+        ((Chronometer) findViewById(R.id.chronometer1)).stop();
+    }
+
+    public void resetChronometer(View view) {
+        ((Chronometer) findViewById(R.id.chronometer1)).setBase(SystemClock.elapsedRealtime());
+        timeWhenStopped = 0;
+    }
     /**
      * A placeholder fragment containing a simple view.
      */

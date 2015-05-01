@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.app.Fragment;
+import android.widget.Chronometer;
 import android.widget.Toast;
 
 import com.androidquery.AQuery;
@@ -40,6 +41,8 @@ public class FragmentTest extends Fragment {
         System.out.println("asynch POST");
         return view;
     }
+
+
 
 
     public void asyncJson(){
