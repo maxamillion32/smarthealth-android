@@ -79,6 +79,10 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
                 fragment = new FragmentProfile();
                 mTitle = getString(R.string.title_section4);
                 break;
+            case 4:
+                fragment = new FragmentProfileModif();
+                mTitle = getString(R.string.title_section5);
+                break;
         }
         fragmentManager.beginTransaction().replace(R.id.container, fragment).addToBackStack("tag").commit();
 
@@ -99,6 +103,9 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
                 break;
             case 3:
                 mTitle = getString(R.string.title_section4);
+                break;
+            case 4:
+                mTitle = getString(R.string.title_section5);
                 break;
         }
     }
