@@ -110,5 +110,6 @@
     <orderEntry type="library" exported="" name="play-services-safetynet-7.0.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-games-7.0.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-wallet-7.0.0" level="project" />
+    <orderEntry type="library" name="wearable-1.1.0" level="project" />
   </component>
 </module>
