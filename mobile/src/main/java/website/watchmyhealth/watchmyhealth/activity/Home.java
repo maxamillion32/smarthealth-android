@@ -1,24 +1,20 @@
-package website.watchmyhealth.watchmyhealth;
+package website.watchmyhealth.watchmyhealth.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import website.watchmyhealth.watchmyhealth.NavigationDrawerFragment;
+import website.watchmyhealth.watchmyhealth.R;
+import website.watchmyhealth.watchmyhealth.fragment.FragmentMap;
+import website.watchmyhealth.watchmyhealth.fragment.FragmentProfile;
+import website.watchmyhealth.watchmyhealth.fragment.FragmentTest;
+import website.watchmyhealth.watchmyhealth.fragment.FragmentTest2;
 
 
 /**
@@ -79,10 +75,6 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
                 fragment = new FragmentProfile();
                 mTitle = getString(R.string.title_section4);
                 break;
-            case 4:
-                fragment = new FragmentProfileModif();
-                mTitle = getString(R.string.title_section5);
-                break;
         }
         fragmentManager.beginTransaction().replace(R.id.container, fragment).addToBackStack("tag").commit();
 
@@ -103,9 +95,6 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
                 break;
             case 3:
                 mTitle = getString(R.string.title_section4);
-                break;
-            case 4:
-                mTitle = getString(R.string.title_section5);
                 break;
         }
     }

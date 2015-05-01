@@ -1,4 +1,4 @@
-package website.watchmyhealth.watchmyhealth;
+package website.watchmyhealth.watchmyhealth.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -31,6 +31,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import website.watchmyhealth.watchmyhealth.R;
 
 
 /**

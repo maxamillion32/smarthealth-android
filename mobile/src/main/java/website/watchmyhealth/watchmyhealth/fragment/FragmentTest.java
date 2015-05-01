@@ -1,4 +1,4 @@
-package website.watchmyhealth.watchmyhealth;
+package website.watchmyhealth.watchmyhealth.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import website.watchmyhealth.watchmyhealth.R;
 
 /**
  * Created by Yoann on 26/04/2015.

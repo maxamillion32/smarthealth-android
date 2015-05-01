@@ -56,13 +56,21 @@
                 android:touchscreenBlocksFocus="false"
                 android:weightSum="1">
 
+                <Switch
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/switchMetricUsUnit"
+                    android:checked="false"
+                    android:layout_marginLeft="25dp" />
+
                 <TextView
                     android:layout_width="148dp"
                     android:layout_height="wrap_content"
                     android:text="Email"
                     android:id="@+id/tvEmail"
-                    android:layout_marginLeft="50dp"
-                    android:textSize="25sp" />
+                    android:layout_marginLeft="25dp"
+                    android:textSize="25sp"
+                    android:layout_marginTop="10dp" />
 
                 <EditText
                     android:layout_width="match_parent"
@@ -79,13 +87,13 @@
                     android:layout_height="wrap_content"
                     android:text="Date de naissance"
                     android:id="@+id/tvDateNaissance"
-                    android:layout_marginLeft="50dp"
+                    android:layout_marginLeft="25dp"
                     android:textSize="25sp"
-                    android:layout_marginTop="25dp"
+                    android:layout_marginTop="10dp"
                     android:layout_weight="0.39" />
 
                 <EditText
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:inputType="date"
                     android:ems="10"
@@ -103,9 +111,9 @@
                     android:layout_height="wrap_content"
                     android:text="Taille"
                     android:id="@+id/tvTaille"
-                    android:layout_marginLeft="50dp"
+                    android:layout_marginLeft="25dp"
                     android:textSize="25sp"
-                    android:layout_marginTop="25dp" />
+                    android:layout_marginTop="10dp" />
 
                 <GridLayout
                     android:layout_width="fill_parent"
@@ -114,12 +122,13 @@
                     <EditText
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:inputType="numberSigned"
+                        android:inputType="number"
                         android:ems="10"
                         android:id="@+id/modifTaille"
                         android:layout_row="0"
                         android:layout_column="0"
-                        android:layout_marginLeft="25dp" />
+                        android:layout_marginLeft="25dp"
+                        android:enabled="true" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -138,9 +147,9 @@
                     android:layout_height="wrap_content"
                     android:text="Poids"
                     android:id="@+id/tvPoids"
-                    android:layout_marginLeft="50dp"
+                    android:layout_marginLeft="25dp"
                     android:textSize="25sp"
-                    android:layout_marginTop="25dp" />
+                    android:layout_marginTop="10dp" />
 
                 <GridLayout
                     android:layout_width="fill_parent"
@@ -154,7 +163,9 @@
                         android:id="@+id/modifPoids"
                         android:layout_row="0"
                         android:layout_column="0"
-                        android:layout_marginLeft="20dp" />
+                        android:layout_marginLeft="20dp"
+                        android:enabled="true" />
+
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -167,20 +178,6 @@
                         android:layout_column="1" />
 
                 </GridLayout>
-
-                <Spinner
-                    android:layout_width="481dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/spinner"
-                    android:layout_row="0"
-                    android:layout_column="8"
-                    android:spinnerMode="dialog" />
-
-                <Spinner
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/spinner2"
-                    android:layout_gravity="right" />
 
             </LinearLayout>
 

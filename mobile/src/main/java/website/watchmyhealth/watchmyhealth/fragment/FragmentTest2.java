@@ -1,4 +1,4 @@
-package website.watchmyhealth.watchmyhealth;
+package website.watchmyhealth.watchmyhealth.fragment;
 
 
 import android.os.Bundle;
@@ -12,6 +12,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import website.watchmyhealth.watchmyhealth.R;
 
 /**
  * Created by Yoann on 26/04/2015.

@@ -6,7 +6,6 @@
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Map</string>
     <string name="title_section4">Profile</string>
-    <string name="title_section5">Profil Modification</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -19,4 +18,5 @@
     <string name="title_activity_login">LoginActivity</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_profil_modif">ProfilModif</string>
 </resources>

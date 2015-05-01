@@ -1,4 +1,4 @@
-package website.watchmyhealth.watchmyhealth;
+package website.watchmyhealth.watchmyhealth.fragment;
 
 
 import android.os.Bundle;
@@ -17,6 +17,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import website.watchmyhealth.watchmyhealth.R;
 
 /**
  * Created by Yoann on 26/04/2015.
