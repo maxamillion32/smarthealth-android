@@ -3,8 +3,9 @@
 
     <string name="app_name">Watch My Health</string>
     <string name="title_section1">Accueil</string>
-    <string name="title_section2">Votre map</string>
-    <string name="title_section3">Section 3</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Map</string>
+    <string name="title_section4">Profile</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
@@ -16,20 +17,4 @@
     <string name="title_activity_login">LoginActivity</string>
 
     <string name="hello_world">Hello world!</string>
-    <string-array name="planets_array">
-        <item>Mercury</item>
-        <item>Venus</item>
-        <item>Earth</item>
-        <item>Mars</item>
-        <item>Jupiter</item>
-        <item>Saturn</item>
-        <item>Uranus</item>
-        <item>Neptune</item>
-        <item>Your Location</item>
-    </string-array>
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
-    <string name="action_websearch">Web search</string>
-    <string name="app_not_available">Sorry, there\'s no web browser available</string>
-
 </resources>
