@@ -9,13 +9,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-<<<<<<< HEAD:mobile/src/main/java/website/watchmyhealth/watchmyhealth/activity/Home.java
-=======
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Chronometer;
->>>>>>> f523b7d9c7fbf52885dcac91472c648dd52cfd84:mobile/src/main/java/website/watchmyhealth/watchmyhealth/Home.java
-
 import website.watchmyhealth.watchmyhealth.NavigationDrawerFragment;
 import website.watchmyhealth.watchmyhealth.R;
 import website.watchmyhealth.watchmyhealth.fragment.FragmentMap;
