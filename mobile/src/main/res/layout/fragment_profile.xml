@@ -40,7 +40,8 @@
                 android:layout_gravity="right|top"
                 android:clickable="true"
                 android:focusable="false"
-                android:background="#ffffda5b" />
+                android:background="#ffffda5b"
+                android:onClick="goToModifyUserProfile" />
 
         </FrameLayout>
     </LinearLayout>

@@ -38,8 +38,8 @@ public class FragmentTest extends Fragment {
         aq = new AQuery(getActivity(), view);
 
         /*A mettre dans des boutons*/
-        asyncJson();
-        //async_post();
+        //asyncJson();
+        async_post();
         System.out.println("asynch POST");
         return view;
     }
@@ -74,7 +74,7 @@ public class FragmentTest extends Fragment {
 
     public void async_post(){
         //do a twiiter search with a http post
-        String url = "http://192.168.0.46:8080/smartwatchproject/test";
+        String url = "http://172.19.150.235:8080/smartwatchproject/test";
         int idUser = 1201;
         int nbPas = 3000;
         ArrayList<String> latitude= new ArrayList<String>();

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="1">
-
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -13,7 +13,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:touchscreenBlocksFocus="false"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:weightSum="1">
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -52,7 +53,7 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/Layout1"
                 android:layout_marginTop="25dp"
                 android:touchscreenBlocksFocus="false"
@@ -174,6 +175,22 @@
 
                 </GridLayout>
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4.32">
+
+                <ImageButton
+                    android:layout_width="72dp"
+                    android:layout_height="61dp"
+                    android:id="@+id/imageButton3"
+                    android:onClick="confirmModifyUserProfile"
+                    android:src="#ff81a9ff"
+                    android:layout_gravity="center_horizontal"
+                    android:clickable="true" />
             </LinearLayout>
 
         </LinearLayout>
