@@ -5,6 +5,9 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.InputType;
@@ -29,6 +32,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import website.watchmyhealth.watchmyhealth.R;
+import website.watchmyhealth.watchmyhealth.fragment.FragmentProfile;
 
 
 public class ProfilModif extends ActionBarActivity {
@@ -169,5 +173,10 @@ public class ProfilModif extends ActionBarActivity {
                 }
             }
         });
+    }
+    public void confirmModifyUserProfile(View view) {
+        Intent intent = new Intent(ProfilModif.this, Home.class);
+        intent.putExtra("go_to_fragment", 3);
+        startActivity(intent);
     }
 }

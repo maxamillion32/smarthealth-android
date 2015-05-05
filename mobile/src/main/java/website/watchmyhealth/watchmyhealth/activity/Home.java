@@ -1,11 +1,17 @@
 package website.watchmyhealth.watchmyhealth.activity;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -58,15 +64,19 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        Intent intent = getIntent();
+        if( intent.getExtras() !=null){
+            //if(intent.getExtras().containsKey("go_to_fragment")){
+                System.out.println("intent ===========================================================================  go to fragment !");
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+                onNavigationDrawerItemSelected(intent.getIntExtra("go_to_fragment", 3));
+                intent.getExtras().remove("go_to_fragment");
+            //}
+        }
+        mNavigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
-
         // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
+        mNavigationDrawerFragment.setUp(R.id.navigation_drawer,(DrawerLayout) findViewById(R.id.drawer_layout));
         aq = new AQuery(this);
 
         /*A mettre dans des boutons*/
@@ -188,20 +198,19 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
     public void goToModifyUserProfile(View view) {
         Intent redirectModify = new Intent(this, ProfilModif.class);
         startActivity(redirectModify);
-        this.finish();
     }
 
     // Button to be redirected to FragmentProfile.java
     // and to update all the data
-    public void confirmModifyUserProfile(View view) {
-        /*Intent confirmModifications = new Intent(this, FragmentProfile.class);
-        startActivity(confirmModifications);
-        this.finish();
-        *//*
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = (Fragment)new FragmentProfile();
-        fragmentManager.beginTransaction().replace(R.id.container, fragment).addToBackStack("tag").commit();*/
-    }
+//    public void confirmModifyUserProfile(View view) {
+//        /*Intent confirmModifications = new Intent(this, FragmentProfile.class);
+//        startActivity(confirmModifications);
+//        this.finish();
+//        *//*
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        Fragment fragment = (Fragment)new FragmentProfile();
+//        fragmentManager.beginTransaction().replace(R.id.container, fragment).addToBackStack("tag").commit();*/
+//    }
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -279,7 +288,7 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
 
         String[] longitude= {"47.26545","47.26545","47.26545","47.26545"};
         Date date = new Date();
-        //Une appelle de méthode d'Async_post pour chaque jour (la date), car il faut envoyer toutes les données d'un jour ensemble
+        //Une appelle de methode d'Async_post pour chaque jour (la date), car il faut envoyer toutes les donnees d'un jour ensemble
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("nom", idUser);
         params.put("dateDuJour",date);

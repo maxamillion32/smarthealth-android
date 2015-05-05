@@ -9,12 +9,7 @@
         android:layout_height="match_parent"
         android:background="#ffffffff">
 
-        <ImageView
-            android:layout_width="228dp"
-            android:layout_height="228dp"
-            android:id="@+id/imageView"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_unice" />
+
     </FrameLayout>
     <fragment android:id="@+id/navigation_drawer"
         android:layout_width="@dimen/navigation_drawer_width" android:layout_height="match_parent"
