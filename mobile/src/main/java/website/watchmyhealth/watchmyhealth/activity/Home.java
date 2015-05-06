@@ -69,6 +69,9 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
             //if(intent.getExtras().containsKey("go_to_fragment")){
                 System.out.println("intent ===========================================================================  go to fragment !");
 
+            System.out.println(intent.getStringExtra("EXTRA_USER_MODIF_DATE_NAISSANCE"));
+            System.out.println(intent.getStringExtra("EXTRA_USER_MODIF_TAILLE"));
+            System.out.println(intent.getStringExtra("EXTRA_USER_MODIF_POIDS"));
                 onNavigationDrawerItemSelected(intent.getIntExtra("go_to_fragment", 3));
                 intent.getExtras().remove("go_to_fragment");
             //}

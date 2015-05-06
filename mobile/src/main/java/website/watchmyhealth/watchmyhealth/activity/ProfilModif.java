@@ -27,9 +27,19 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxCallback;
+import com.androidquery.callback.AjaxStatus;
+
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import website.watchmyhealth.watchmyhealth.R;
 import website.watchmyhealth.watchmyhealth.fragment.FragmentProfile;
@@ -41,6 +51,7 @@ public class ProfilModif extends ActionBarActivity {
     private EditText modifDateNaissance;
     private EditText modifPoids;
     private EditText modifTaille;
+    private EditText modifMail;
 
     private DatePickerDialog fromDatePickerDialog;
     private SimpleDateFormat dateFormatter;
@@ -48,6 +59,12 @@ public class ProfilModif extends ActionBarActivity {
     private Dialog dialogTaille;
     private NumberPicker npTaille;
     private NumberPicker nbPoids;
+    private AQuery aq;
+    private Intent intent;
+    private final String EXTRA_USER_MODIF_EMAIL = "userModifTaille";
+    private final String EXTRA_USER_MODIF_POIDS = "userModifPoids";
+    private final String EXTRA_USER_MODIF_TAILLE = "userModifTaille";
+    private final String EXTRA_USER_MODIF_DATE_NAISSANCE = "userModifDateNaissance";
 
 
 
@@ -57,17 +74,22 @@ public class ProfilModif extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profil_modif);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        intent = new Intent(ProfilModif.this, Home.class);
+
+        modifMail = (EditText) findViewById(R.id.modifMail);
 
         dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.FRANCE);
+        //recuperation de la taille de l'utilisateur
         modifTaille = (EditText) findViewById(R.id.modifTaille);
         modifTaille.setInputType(InputType.TYPE_NULL);
-
+        //recuperation de la date de naissance de l'utilisateur
         modifDateNaissance = (EditText) findViewById(R.id.modifDateNaissance);
         modifDateNaissance.setInputType(InputType.TYPE_NULL);
-
+        //recuperation du poids de l'utilisateur
         modifPoids = (EditText) findViewById(R.id.modifPoids);
         modifPoids.setInputType(InputType.TYPE_NULL);
-        // modifDateNaissance.requestFocus();
+        //instanciation de la class AQuery permettant de faire des requete ajax sur un serveur
+        aq = new AQuery(this);
 
         setDateTimeField();
         setModifPoids();
@@ -175,8 +197,37 @@ public class ProfilModif extends ActionBarActivity {
         });
     }
     public void confirmModifyUserProfile(View view) {
-        Intent intent = new Intent(ProfilModif.this, Home.class);
+        intent.putExtra(EXTRA_USER_MODIF_TAILLE, this.modifTaille.getText().toString());
+        intent.putExtra(EXTRA_USER_MODIF_POIDS, this.modifPoids.getText().toString());
+        intent.putExtra(EXTRA_USER_MODIF_DATE_NAISSANCE, this.modifDateNaissance.getText().toString());
+        intent.putExtra(EXTRA_USER_MODIF_EMAIL, this.modifMail.getText().toString());
         intent.putExtra("go_to_fragment", 3);
+        async_post();
         startActivity(intent);
+    }
+
+    public void async_post(){
+        //do a twiiter search with a http post
+        String url = "http://192.168.43.133:8080/SmartHealth---Web-App/test";
+        int idUser = 1201;
+        Date date = new Date();
+        //Une appelle de methode d'Async_post pour chaque jour (la date), car il faut envoyer toutes les donnees d'un jour donné en meme temps
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("useFunctionServer","modificationProfil");
+        params.put("userId",idUser);
+        params.put("dateDuJour",date);
+        params.put("userEmail",this.modifMail.getText());
+        params.put("userDateNaissance",this.modifDateNaissance.getText());
+        params.put("userPoids",this.modifPoids.getText());
+        params.put("userTaille",this.modifTaille.getText());
+
+        aq.ajax(url, params, JSONObject.class, new AjaxCallback<JSONObject>() {
+            @Override
+            public void callback(String url, JSONObject json, AjaxStatus status) {
+                //showResult(json);
+                System.out.println("Dans aq.ajax = "+json);
+            }
+        });
+
     }
 }
