@@ -1,18 +1,30 @@
 package website.watchmyhealth.watchmyhealth;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Handler;
+import android.support.wearable.activity.ConfirmationActivity;
 import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.TextView;
-import com.google.android.gms.wearable.PutDataMapRequest;
-import website.watchmyhealth.watchmyhealth.R;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wearable.MessageApi;
+import com.google.android.gms.wearable.MessageEvent;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.Wearable;
+import com.google.android.gms.wearable.PutDataMapRequest;
 
 import java.lang.InterruptedException;import java.lang.Override;
 import java.lang.Runnable;import java.lang.String;
@@ -30,7 +42,14 @@ public class HomeWatch extends Activity implements SensorEventListener {
     private TextView mTextViewStepDetect;
     private TextView mTextViewHeart;
     PutDataMapRequest dataMap = PutDataMapRequest.create("/count");
-    GoogleApiClient mGoogleApiClient;
+
+    private final String MESSAGE1_PATH = "/message1";
+
+    private GoogleApiClient apiClient;
+    private NodeApi.NodeListener nodeListener;
+    private MessageApi.MessageListener messageListener;
+    private String remoteNodeId;
+    private Handler handler;
 
      //------------------------- DE SENSORSERVICE.JAVA -----------------------
     //private Sensor mHeartrateSensor;
@@ -60,6 +79,93 @@ public class HomeWatch extends Activity implements SensorEventListener {
                 mTextViewHeart = (TextView) stub.findViewById(R.id.heart);
                 getStepCount();
 
+            }
+        });
+
+        handler = new Handler();
+
+
+        // Create NodeListener that enables buttons when a node is connected and disables buttons when a node is disconnected
+        nodeListener = new NodeApi.NodeListener() {
+            @Override
+            public void onPeerConnected(Node node) {
+                remoteNodeId = node.getId();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                    }
+                });
+                Intent intent = new Intent(getApplicationContext(), ConfirmationActivity.class);
+                System.out.println("Connecté");
+                startActivity(intent);
+            }
+
+            @Override
+            public void onPeerDisconnected(Node node) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                    }
+                });
+                Intent intent = new Intent(getApplicationContext(), ConfirmationActivity.class);
+                System.out.println("Déconnecté");
+                startActivity(intent);
+            }
+        };
+
+        // Create MessageListener that receives messages sent from a mobile
+        messageListener = new MessageApi.MessageListener() {
+            @Override
+            public void onMessageReceived(MessageEvent messageEvent) {
+                System.out.println(messageEvent.getPath());
+                sync_smartwatch();
+            }
+        };
+
+        // Create GoogleApiClient
+        apiClient = new GoogleApiClient.Builder(getApplicationContext()).addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+            @Override
+            public void onConnected(Bundle bundle) {
+                // Register Node and Message listeners
+                Wearable.NodeApi.addListener(apiClient, nodeListener);
+                Wearable.MessageApi.addListener(apiClient, messageListener);
+                // If there is a connected node, get it's id that is used when sending messages
+                Wearable.NodeApi.getConnectedNodes(apiClient).setResultCallback(new ResultCallback<NodeApi.GetConnectedNodesResult>() {
+                    @Override
+                    public void onResult(NodeApi.GetConnectedNodesResult getConnectedNodesResult) {
+                        if (getConnectedNodesResult.getStatus().isSuccess() && getConnectedNodesResult.getNodes().size() > 0) {
+                            remoteNodeId = getConnectedNodesResult.getNodes().get(0).getId();
+                            System.out.println("Connecté");
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onConnectionSuspended(int i) {
+                System.out.println("Suspendu");
+            }
+        }).addApi(Wearable.API).build();
+
+
+        apiClient.connect();
+    }
+
+    public void sync_smartwatch() {
+
+        System.out.println("SMARTWATCH");
+
+
+        Wearable.MessageApi.sendMessage(apiClient, remoteNodeId, MESSAGE1_PATH, null).setResultCallback(new ResultCallback<MessageApi.SendMessageResult>() {
+            @Override
+            public void onResult(MessageApi.SendMessageResult sendMessageResult) {
+                Intent intent = new Intent(getApplicationContext(), ConfirmationActivity.class);
+                if (sendMessageResult.getStatus().isSuccess()) {
+                    System.out.println("Succès");
+                } else {
+                    System.out.println("Echec");
+                }
+                startActivity(intent);
             }
         });
     }
