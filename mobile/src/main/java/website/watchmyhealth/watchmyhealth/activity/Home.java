@@ -1,25 +1,18 @@
 package website.watchmyhealth.watchmyhealth.activity;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Chronometer;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidquery.AQuery;
@@ -37,7 +30,7 @@ import java.util.Map;
 import website.watchmyhealth.watchmyhealth.NavigationDrawerFragment;
 import website.watchmyhealth.watchmyhealth.R;
 import website.watchmyhealth.watchmyhealth.fragment.FragmentMap;
-import website.watchmyhealth.watchmyhealth.fragment.FragmentProfile;
+import website.watchmyhealth.watchmyhealth.fragment.FragmentProfil;
 import website.watchmyhealth.watchmyhealth.fragment.FragmentTest;
 import website.watchmyhealth.watchmyhealth.fragment.FragmentTest2;
 
@@ -58,6 +51,14 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
      */
     private CharSequence mTitle;
     private AQuery aq;
+    private TextView tvEmail;
+    private TextView tvDateNaissance;
+    private TextView tvTaille;
+    private TextView tvPoids;
+    private final String EXTRA_USER_TV_MAIL = "EXTRA_USER_TV_MAIL";
+    private final String EXTRA_USER_TV_DATE_NAISSANCE = "EXTRA_USER_TV_DATE_NAISSANCE";
+    private final String EXTRA_USER_TV_POIDS = "EXTRA_USER_TV_POIDS";
+    private final String EXTRA_USER_TV_TAILLE = "EXTRA_USER_TV_TAILLE";
 
 
     @Override
@@ -66,15 +67,9 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         setContentView(R.layout.activity_home);
         Intent intent = getIntent();
         if( intent.getExtras() !=null){
-            //if(intent.getExtras().containsKey("go_to_fragment")){
                 System.out.println("intent ===========================================================================  go to fragment !");
-
-            System.out.println(intent.getStringExtra("EXTRA_USER_MODIF_DATE_NAISSANCE"));
-            System.out.println(intent.getStringExtra("EXTRA_USER_MODIF_TAILLE"));
-            System.out.println(intent.getStringExtra("EXTRA_USER_MODIF_POIDS"));
-                onNavigationDrawerItemSelected(intent.getIntExtra("go_to_fragment", 3));
-                intent.getExtras().remove("go_to_fragment");
-            //}
+                onNavigationDrawerItemSelected(intent.getIntExtra("GO_TO_FRAGMENT_PROFIL", 3));
+                intent.getExtras().remove("GO_TO_FRAGMENT_PROFIL");
         }
         mNavigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -100,47 +95,29 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         switch (position) {
             case 0:
                 fragment = new FragmentTest();
-                mTitle = getString(R.string.title_section1);
+                mTitle = getString(R.string.navigation_accueil);
                 break;
             case 1:
                 fragment = new FragmentTest2();
-                mTitle = getString(R.string.title_section3);
+                mTitle = getString(R.string.navigation_graphique);
                 break;
             case 2:
                 fragment = new FragmentMap();
-                mTitle = getString(R.string.title_section2);
+                mTitle = getString(R.string.navigation_map);
                 break;
-            case 3:
-                fragment = new FragmentProfile();
-                mTitle = getString(R.string.title_section4);
+            case 3: //attention, si on change de "case" pour FragmentProfil, le mappage ne se fera plus entre ProfilModif et FragmentProfil ctrl+f = GO_TO_FRAGMENT_PROFIL
+                fragment = new FragmentProfil();
+                mTitle = getString(R.string.navigation_profil);
                 break;
             case 4:
-                fragment = new FragmentTest();
-                mTitle = getString(R.string.title_section1);
+                fragment = new FragmentProfil();
+                mTitle = getString(R.string.navigation_a_propos);
                 break;
         }
         fragmentManager.beginTransaction().replace(R.id.container, fragment).addToBackStack("tag").commit();
 
     }
 
-
-
-    public void onSectionAttached(int number) {
-        switch (number) {
-            case 0:
-                mTitle = getString(R.string.title_section1);
-                break;
-            case 1:
-                mTitle = getString(R.string.title_section2);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section3);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section4);
-                break;
-        }
-    }
 
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
@@ -199,7 +176,17 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
 
     // Button to be redirected to ProfilModif.java
     public void goToModifyUserProfile(View view) {
+
+
+        tvEmail = (TextView)findViewById(R.id.tvEmail);
+        tvDateNaissance = (TextView)findViewById(R.id.tvDateNaissance);
+        tvTaille =(TextView)findViewById(R.id.tvTaille);
+        tvPoids=(TextView)findViewById(R.id.tvPoids);
         Intent redirectModify = new Intent(this, ProfilModif.class);
+        redirectModify.putExtra(EXTRA_USER_TV_MAIL,tvEmail.getText().toString());
+        redirectModify.putExtra(EXTRA_USER_TV_DATE_NAISSANCE,tvDateNaissance.getText());
+        redirectModify.putExtra(EXTRA_USER_TV_POIDS,tvPoids.getText());
+        redirectModify.putExtra(EXTRA_USER_TV_TAILLE, tvTaille.getText());
         startActivity(redirectModify);
     }
 

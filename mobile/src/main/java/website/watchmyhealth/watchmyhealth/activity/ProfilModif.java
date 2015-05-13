@@ -1,31 +1,20 @@
 package website.watchmyhealth.watchmyhealth.activity;
 
-import android.app.AlertDialog;
+import android.app.ActionBar;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
-import android.widget.RelativeLayout;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
@@ -34,7 +23,6 @@ import com.androidquery.callback.AjaxStatus;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -42,7 +30,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import website.watchmyhealth.watchmyhealth.R;
-import website.watchmyhealth.watchmyhealth.fragment.FragmentProfile;
 
 
 public class ProfilModif extends ActionBarActivity {
@@ -54,17 +41,17 @@ public class ProfilModif extends ActionBarActivity {
     private EditText modifMail;
 
     private DatePickerDialog fromDatePickerDialog;
-    private SimpleDateFormat dateFormatter;
     private Dialog dialogPoids;
     private Dialog dialogTaille;
     private NumberPicker npTaille;
     private NumberPicker nbPoids;
     private AQuery aq;
     private Intent intent;
-    private final String EXTRA_USER_MODIF_EMAIL = "userModifTaille";
-    private final String EXTRA_USER_MODIF_POIDS = "userModifPoids";
-    private final String EXTRA_USER_MODIF_TAILLE = "userModifTaille";
-    private final String EXTRA_USER_MODIF_DATE_NAISSANCE = "userModifDateNaissance";
+    private final String EXTRA_USER_MODIF_EMAIL = "EXTRA_USER_MODIF_EMAIL";
+    private final String EXTRA_USER_MODIF_POIDS = "EXTRA_USER_MODIF_POIDS";
+    private final String EXTRA_USER_MODIF_TAILLE = "EXTRA_USER_MODIF_TAILLE";
+    private final String EXTRA_USER_MODIF_DATE_NAISSANCE = "EXTRA_USER_MODIF_DATE_NAISSANCE";
+    private final String GO_TO_FRAGMENT_PROFIL = "GO_TO_FRAGMENT_PROFIL";
 
 
 
@@ -74,11 +61,8 @@ public class ProfilModif extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profil_modif);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        intent = new Intent(ProfilModif.this, Home.class);
-
+        //recuperation du mail de l'utilisateur
         modifMail = (EditText) findViewById(R.id.modifMail);
-
-        dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.FRANCE);
         //recuperation de la taille de l'utilisateur
         modifTaille = (EditText) findViewById(R.id.modifTaille);
         modifTaille.setInputType(InputType.TYPE_NULL);
@@ -90,7 +74,14 @@ public class ProfilModif extends ActionBarActivity {
         modifPoids.setInputType(InputType.TYPE_NULL);
         //instanciation de la class AQuery permettant de faire des requete ajax sur un serveur
         aq = new AQuery(this);
-
+        Intent intentFromProfil = getIntent();
+        if( intentFromProfil.getExtras() !=null){
+            //On récupére les données de la page de profil afin de les mettre dans des EditText afin de les modifier
+            this.modifMail.setText(intentFromProfil.getStringExtra("EXTRA_USER_TV_MAIL"));
+            this.modifDateNaissance.setText(intentFromProfil.getStringExtra("EXTRA_USER_TV_DATE_NAISSANCE"));
+            this.modifPoids.setText(intentFromProfil.getStringExtra("EXTRA_USER_TV_POIDS"));
+            this.modifTaille.setText(intentFromProfil.getStringExtra("EXTRA_USER_TV_TAILLE"));
+        }
         setDateTimeField();
         setModifPoids();
         setModifTaille();
@@ -108,11 +99,13 @@ public class ProfilModif extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                System.out.println("Maouuuuuu 1111111");
+                this.onBackPressed();
+            case R.id.action_settings:
+                System.out.println("Maouuuuuu 2222222");
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -125,7 +118,7 @@ public class ProfilModif extends ActionBarActivity {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar newDate = Calendar.getInstance();
                 newDate.set(year, monthOfYear, dayOfMonth);
-                modifDateNaissance.setText(dateFormatter.format(newDate.getTime()));
+                modifDateNaissance.setText(new SimpleDateFormat("dd-MM-yyyy", Locale.FRANCE).format(newDate.getTime()));
             }
         },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
         modifDateNaissance.setOnClickListener(new View.OnClickListener() {
@@ -197,11 +190,14 @@ public class ProfilModif extends ActionBarActivity {
         });
     }
     public void confirmModifyUserProfile(View view) {
-        intent.putExtra(EXTRA_USER_MODIF_TAILLE, this.modifTaille.getText().toString());
+        System.out.println(this.modifTaille.getText().toString()+"====================Dans confirmModifyUserProfile =========================="+this.modifTaille.getText());
+        intent = new Intent(this, Home.class);
+
+        intent.putExtra(EXTRA_USER_MODIF_TAILLE, modifTaille.getText().toString());
         intent.putExtra(EXTRA_USER_MODIF_POIDS, this.modifPoids.getText().toString());
         intent.putExtra(EXTRA_USER_MODIF_DATE_NAISSANCE, this.modifDateNaissance.getText().toString());
         intent.putExtra(EXTRA_USER_MODIF_EMAIL, this.modifMail.getText().toString());
-        intent.putExtra("go_to_fragment", 3);
+        intent.putExtra(GO_TO_FRAGMENT_PROFIL, 3);
         async_post();
         startActivity(intent);
     }
@@ -211,7 +207,7 @@ public class ProfilModif extends ActionBarActivity {
         String url = "http://192.168.43.133:8080/SmartHealth---Web-App/test";
         int idUser = 1201;
         Date date = new Date();
-        //Une appelle de methode d'Async_post pour chaque jour (la date), car il faut envoyer toutes les donnees d'un jour donné en meme temps
+        //Une appelle de methode d'Async_post pour chaque jour (la date), car il faut envoyer toutes les donnees d'un jour donne en meme temps
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("useFunctionServer","modificationProfil");
         params.put("userId",idUser);

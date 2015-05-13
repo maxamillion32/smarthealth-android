@@ -2,10 +2,11 @@
 <resources>
 
     <string name="app_name">Watch My Health</string>
-    <string name="title_section1">Accueil</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Map</string>
-    <string name="title_section4">Profile</string>
+    <string name="navigation_accueil">Accueil</string>
+    <string name="navigation_graphique">Vos graphiques</string>
+    <string name="navigation_map">Map</string>
+    <string name="navigation_profil">Profil</string>
+    <string name="navigation_a_propos">A propos</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -19,4 +20,5 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_profil_modif">ProfilModif</string>
+    <string name="action_save_profil">Enregistrer</string>
 </resources>

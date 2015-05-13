@@ -21,12 +21,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import website.watchmyhealth.watchmyhealth.R;
+import website.watchmyhealth.watchmyhealth.activity.ProfilModif;
 
 /**
  * Created by Yoann on 26/04/2015.
  */
 
-public class FragmentProfile extends Fragment {
+public class FragmentProfil extends Fragment {
 
     private TextView tvEmail;
     private TextView tvDateNaissance;
@@ -42,14 +43,18 @@ public class FragmentProfile extends Fragment {
         tvDateNaissance = (TextView)view.findViewById(R.id.tvDateNaissance);
         tvTaille =(TextView)view.findViewById(R.id.tvTaille);
         tvPoids=(TextView)view.findViewById(R.id.tvPoids);
-        Intent intent= getActivity().getIntent();
-        if( intent.getExtras() !=null) {
-            tvEmail.setText(intent.getStringExtra("EXTRA_USER_MODIF_EMAIL"));
-            tvDateNaissance.setText(intent.getStringExtra("EXTRA_USER_MODIF_DATE_NAISSANCE"));
-            tvTaille.setText(intent.getStringExtra("EXTRA_USER_MODIF_TAILLE"));
-            tvPoids.setText(intent.getStringExtra("EXTRA_USER_MODIF_POIDS"));
+        Intent intentFromProfilModif = getActivity().getIntent();
+        if( intentFromProfilModif.getExtras() !=null) {
+
+            tvEmail.setText(intentFromProfilModif.getStringExtra("EXTRA_USER_MODIF_EMAIL"));
+            tvDateNaissance.setText(intentFromProfilModif.getStringExtra("EXTRA_USER_MODIF_DATE_NAISSANCE"));
+            tvTaille.setText(intentFromProfilModif.getStringExtra("EXTRA_USER_MODIF_TAILLE"));
+            tvPoids.setText(intentFromProfilModif.getStringExtra("EXTRA_USER_MODIF_POIDS"));
         }
+
             return view;
     }
+
+
 
 }

@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:orientation="vertical"
+    tools:context=".activity.Home">
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -28,7 +31,7 @@
                     <QuickContactBadge
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/quickContactBadge" />
+                        android:id="@+id/badge" />
                 </FrameLayout>
 
                 <FrameLayout
@@ -45,7 +48,7 @@
                         android:textSize="30sp"
                         android:gravity="center_horizontal"
                         android:typeface="normal"
-                        android:fontFeatureSettings="@string/title_section1" />
+                        />
 
                 </FrameLayout>
             </LinearLayout>
@@ -74,7 +77,6 @@
                     android:inputType="textEmailAddress"
                     android:ems="10"
                     android:id="@+id/modifMail"
-                    android:text="fjauvat@gmail.com"
                     android:layout_marginLeft="25dp"
                     android:layout_marginRight="25dp" />
 
@@ -181,16 +183,17 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="4.32">
+                android:layout_weight="1.55"
+                android:gravity="bottom"
+                android:layout_gravity="bottom">
 
-                <ImageButton
-                    android:layout_width="72dp"
-                    android:layout_height="61dp"
-                    android:id="@+id/imageButton3"
-                    android:onClick="confirmModifyUserProfile"
-                    android:src="#ff81a9ff"
-                    android:layout_gravity="center_horizontal"
-                    android:clickable="true" />
+                <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="SAUVEGARDER"
+                    android:id="@+id/button"
+                    android:onClick="confirmModifyUserProfile" />
+
             </LinearLayout>
 
         </LinearLayout>

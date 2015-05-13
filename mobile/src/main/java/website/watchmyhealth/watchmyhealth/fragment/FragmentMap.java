@@ -47,10 +47,7 @@ public class FragmentMap extends Fragment implements LocationListener {
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-
         View v = inflater.inflate(R.layout.fragment_map, null, false);
-        System.out.println("onCreateView");
-
         mapView = (MapView) v.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
         // Gets to GoogleMap from the MapView and does initialization stuff
