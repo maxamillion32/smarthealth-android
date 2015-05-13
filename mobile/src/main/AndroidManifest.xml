@@ -44,17 +44,22 @@
                 android:value=".activity.Home"/>
         </activity>
         <activity
-            android:name=".activity.Home"
-            android:label="@string/app_name">
+        android:name=".activity.Home"
+        android:label="@string/app_name">
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
         </activity>
 
 
+<<<<<<< HEAD
         <!--FABRICE-->
+=======
+        <!--
+        FABRICE
+>>>>>>> 5439dac58eb6b3e370592e7f2a847bab0bdbd56d
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCTe0y36kwOb7XpBqDHOYPDP5zbQ-l1W5w" />
