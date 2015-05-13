@@ -54,12 +54,7 @@
         </activity>
 
 
-<<<<<<< HEAD
-        <!--FABRICE-->
-=======
-        <!--
         FABRICE
->>>>>>> 5439dac58eb6b3e370592e7f2a847bab0bdbd56d
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCTe0y36kwOb7XpBqDHOYPDP5zbQ-l1W5w" />

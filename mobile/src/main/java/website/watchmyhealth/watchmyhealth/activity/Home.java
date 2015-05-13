@@ -1,14 +1,7 @@
 package website.watchmyhealth.watchmyhealth.activity;
 
-<<<<<<< HEAD
-=======
-import android.app.Activity;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
-import android.content.Context;
-import android.content.DialogInterface;
->>>>>>> 5439dac58eb6b3e370592e7f2a847bab0bdbd56d
+
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,18 +15,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Chronometer;
-<<<<<<< HEAD
 import android.widget.TextView;
-=======
-import android.widget.EditText;
->>>>>>> 5439dac58eb6b3e370592e7f2a847bab0bdbd56d
 import android.widget.Toast;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.MessageApi;

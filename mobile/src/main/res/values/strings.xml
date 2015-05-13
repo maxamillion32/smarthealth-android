@@ -20,9 +20,8 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_profil_modif">ProfilModif</string>
-<<<<<<< HEAD
     <string name="action_save_profil">Enregistrer</string>
-=======
+
 
     <string name="received_message1">Received message 1.</string>
     <string name="received_message2">Received message 2.</string>
