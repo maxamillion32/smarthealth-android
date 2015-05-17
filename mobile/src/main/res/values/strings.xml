@@ -13,7 +13,6 @@
     <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
     <string name="provider_enabled">Le %s est maintenant activé</string>
-    <string name="provider_disabled">Le %s est désactivé</string>
     <string name="provider_new_status">The provider %1$s has now a new status %2$s</string>
     <string name="new_location">Nouvelle position: Latitude = %1$s, Longitude = %2$s, Altitude = %3$s avec une précision de %4$s mètres</string>
     <string name="title_activity_login">LoginActivity</string>

@@ -40,7 +40,6 @@
                 android:layout_gravity="right|top"
                 android:clickable="true"
                 android:focusable="false"
-                android:onClick="goToModifyUserProfile"
                 android:background="@android:drawable/ic_menu_edit" />
 
         </FrameLayout>

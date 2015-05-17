@@ -1,9 +1,14 @@
 package website.watchmyhealth.watchmyhealth.activity;
 
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.InputType;
@@ -15,6 +20,8 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
@@ -22,6 +29,12 @@ import com.androidquery.callback.AjaxStatus;
 
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -76,7 +89,7 @@ public class ProfilModif extends ActionBarActivity {
         aq = new AQuery(this);
         Intent intentFromProfil = getIntent();
         if( intentFromProfil.getExtras() !=null){
-            //On récupére les données de la page de profil afin de les mettre dans des EditText afin de les modifier
+            //On r&eacute;cup&eacute;re les donn&eacute;es de la page de profil afin de les mettre dans des EditText afin de les modifier
             this.modifMail.setText(intentFromProfil.getStringExtra("EXTRA_USER_TV_MAIL"));
             this.modifDateNaissance.setText(intentFromProfil.getStringExtra("EXTRA_USER_TV_DATE_NAISSANCE"));
             this.modifPoids.setText(intentFromProfil.getStringExtra("EXTRA_USER_TV_POIDS"));
@@ -101,10 +114,8 @@ public class ProfilModif extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case android.R.id.home:
-                System.out.println("Maouuuuuu 1111111");
                 this.onBackPressed();
             case R.id.action_settings:
-                System.out.println("Maouuuuuu 2222222");
                 return true;
         }
 
@@ -133,6 +144,7 @@ public class ProfilModif extends ActionBarActivity {
         dialogPoids = new Dialog(this);
         dialogPoids.setTitle("Quel est votre poids ?");
         dialogPoids.setContentView(R.layout.number_picker_dialog);
+
         nbPoids = (NumberPicker)dialogPoids.findViewById(R.id.np);
         nbPoids.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
         nbPoids.setMaxValue(300);
@@ -174,7 +186,7 @@ public class ProfilModif extends ActionBarActivity {
         this.modifTaille.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocusTaile) {
-                if(hasFocusTaile){
+                if (hasFocusTaile) {
                     Button buttonOK;
                     buttonOK = (Button) dialogTaille.findViewById(R.id.buttonOK);
                     buttonOK.setOnClickListener(new View.OnClickListener() {
@@ -190,7 +202,7 @@ public class ProfilModif extends ActionBarActivity {
         });
     }
     public void confirmModifyUserProfile(View view) {
-        System.out.println(this.modifTaille.getText().toString()+"====================Dans confirmModifyUserProfile =========================="+this.modifTaille.getText());
+        System.out.println(this.modifTaille.getText().toString() + "====================Dans confirmModifyUserProfile ==========================" + this.modifTaille.getText());
         intent = new Intent(this, Home.class);
 
         intent.putExtra(EXTRA_USER_MODIF_TAILLE, modifTaille.getText().toString());
@@ -198,32 +210,71 @@ public class ProfilModif extends ActionBarActivity {
         intent.putExtra(EXTRA_USER_MODIF_DATE_NAISSANCE, this.modifDateNaissance.getText().toString());
         intent.putExtra(EXTRA_USER_MODIF_EMAIL, this.modifMail.getText().toString());
         intent.putExtra(GO_TO_FRAGMENT_PROFIL, 3);
-        async_post();
+        if(isNetworkAvailable()){
+            async_post();
+            saveDataProfilModifInFile();
+        }else{
+            saveDataProfilModifInFile();
+        }
         startActivity(intent);
     }
 
     public void async_post(){
         //do a twiiter search with a http post
-        String url = "http://192.168.43.133:8080/SmartHealth---Web-App/test";
+        String url = "http://192.168.0.12:8080/SmartHealth---Web-App/test";
         int idUser = 1201;
         Date date = new Date();
         //Une appelle de methode d'Async_post pour chaque jour (la date), car il faut envoyer toutes les donnees d'un jour donne en meme temps
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("useFunctionServer","modificationProfil");
-        params.put("userId",idUser);
-        params.put("dateDuJour",date);
-        params.put("userEmail",this.modifMail.getText());
-        params.put("userDateNaissance",this.modifDateNaissance.getText());
-        params.put("userPoids",this.modifPoids.getText());
-        params.put("userTaille",this.modifTaille.getText());
+        params.put("useFunctionServer", "modificationProfil");
+        params.put("userId", idUser);
+        params.put("dateDuJour", date);
+        params.put("userEmail", this.modifMail.getText());
+        params.put("userDateNaissance", this.modifDateNaissance.getText());
+        params.put("userPoids", this.modifPoids.getText());
+        params.put("userTaille", this.modifTaille.getText());
 
         aq.ajax(url, params, JSONObject.class, new AjaxCallback<JSONObject>() {
             @Override
             public void callback(String url, JSONObject json, AjaxStatus status) {
-                //showResult(json);
-                System.out.println("Dans aq.ajax = "+json);
+                System.out.println("Dans aq.ajax = " + json);
             }
         });
-
     }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager= (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    /**
+     * Permet de sauvegarder les donnees du profil dans un fichier texte pour les recuperer sans connexion(Dans Home.java)
+     */
+    public void saveDataProfilModifInFile(){
+        FileOutputStream fOut = null;
+        OutputStreamWriter osw = null;
+
+        try{
+            fOut = this.openFileOutput("settings.dat", MODE_PRIVATE);
+            String separator = System.getProperty("line.separator");
+            osw = new OutputStreamWriter(fOut);
+            osw.flush();
+            osw.append("taille_" + this.modifTaille.getText().toString());
+            System.out.println("===================System.getProperty(\"line.separator\")===================");
+            osw.append(separator);
+            osw.append("poids_" + this.modifPoids.getText().toString());
+            osw.append(separator);
+            osw.append("dateNaissance_" + this.modifDateNaissance.getText().toString());
+            osw.append(separator);
+            osw.append("mail_" + this.modifMail.getText().toString());
+            System.out.println("poids_" + this.modifPoids.getText().toString());
+            osw.flush();
+            //popup surgissant pour le resultat
+            osw.close();
+            fOut.close();
+        }
+        catch (Exception e) {
+        }
+    }
+
 }

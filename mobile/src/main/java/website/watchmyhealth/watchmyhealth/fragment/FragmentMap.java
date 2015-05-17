@@ -32,13 +32,11 @@ public class FragmentMap extends Fragment implements LocationListener {
 
     private GoogleMap map;
     private MapView mapView;
-    private Location location = new Location("My Location");
     private double latitude;
     private double longitude;
     private LatLng positionUser;
     private LocationManager lm;
-    private boolean bMoveCamera = false;
-    private Marker markerUser = null;
+
     private static final long MIN_TIME = 400;
     private static final float MIN_DISTANCE = 1000;
     private CameraPosition cameraPosition;
@@ -55,18 +53,18 @@ public class FragmentMap extends Fragment implements LocationListener {
         map.getUiSettings().setMyLocationButtonEnabled(true);//false de base
         map.setMyLocationEnabled(true);
 
-//        lm = (LocationManager) this.getActivity().getSystemService(this.getActivity().LOCATION_SERVICE);
+        //Permet d'activer le clique sur le bouton de gps en haut a droite de la map => si GPS non active la pop up s'affiche pour activer le gps
+        //this.locationButtonClickListerner();
+        lm = (LocationManager) this.getActivity().getSystemService(this.getActivity().LOCATION_SERVICE);
 //        if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)){
 //            createGpsDisabledAlert();
 //        }
         lm = (LocationManager) this.getActivity().getSystemService(this.getActivity().LOCATION_SERVICE);
         lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this); //You can also use LocationManager.GPS_PROVIDER and LocationManager.PASSIVE_PROVIDER
-
         // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
         MapsInitializer.initialize(this.getActivity());
         return v;
     }
-
     private void setUpMapIfNeeded() {
         if (map == null) {
             map = ((MapView) getView().findViewById(R.id.map)).getMap();
@@ -127,10 +125,6 @@ public class FragmentMap extends Fragment implements LocationListener {
         latitude = location.getLatitude();
         longitude = location.getLongitude();
         positionUser= new LatLng(latitude,longitude);
-            System.out.println("onLocationChanged -> bMoveCamera");
-            //markerUser = map.addMarker(new MarkerOptions().position(positionUser).title("fabrice126").snippet("Salut les gars !").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_img_profil)));
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(positionUser, 17));
-
         map.moveCamera(CameraUpdateFactory.newLatLng(positionUser));
     }
 
@@ -148,43 +142,54 @@ public class FragmentMap extends Fragment implements LocationListener {
                 newStatus = "AVAILABLE";
                 break;
         }
-        String msg = String.format(getResources().getString(R.string.provider_disabled)," s="+s);
-        Toast.makeText(this.getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onProviderEnabled(String s) {
-        String msg = String.format(getResources().getString(R.string.provider_enabled), s);
-        Toast.makeText(this.getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onProviderDisabled(String s) {
-        String msg = String.format(getResources().getString(R.string.provider_disabled), s);
-        Toast.makeText(this.getActivity(), msg, Toast.LENGTH_SHORT).show();
+        createGpsDisabledAlert();
     }
+
+//    private void locationButtonClickListerner(){
+//        map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener(){
+//
+//            @Override
+//            public boolean onMyLocationButtonClick() {
+//                if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+//                    createGpsDisabledAlert();
+//                } else {
+//                    Location location = map.getMyLocation();
+//                    latitude = location.getLatitude();
+//                    longitude = location.getLongitude();
+//                    positionUser= new LatLng(latitude,longitude);
+//                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(positionUser,17));
+//                }
+//                return true;
+//            }
+//        });
+//
+//    }
+
     private void createGpsDisabledAlert() {
         AlertDialog.Builder localBuilder = new AlertDialog.Builder(this.getActivity());
         localBuilder.setMessage("Le GPS est inactif, voulez-vous l'activer ?").setCancelable(false).setPositiveButton("Activer GPS ",
                 new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                                FragmentMap.this.showGpsOptions();
-                            }
-                        }
-                );
+                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                        startActivity(new Intent("android.settings.LOCATION_SOURCE_SETTINGS"));
+                        FragmentMap.this.getActivity().onAttachFragment(FragmentMap.this);
+                    }
+                }
+        );
         localBuilder.setNegativeButton("Ne pas l'activer ",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface paramDialogInterface, int paramInt) {
                         paramDialogInterface.cancel();
-                        FragmentMap.this.getActivity().finish();
                     }
                 }
         );
         localBuilder.create().show();
-    }
-
-    private void showGpsOptions() {
-        startActivity(new Intent("android.settings.LOCATION_SOURCE_SETTINGS"));
-        this.getActivity().finish();
     }
 }

@@ -1,8 +1,12 @@
 package website.watchmyhealth.watchmyhealth.activity;
 
-
-
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -15,12 +19,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Chronometer;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxCallback;
-import com.androidquery.callback.AjaxStatus;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -29,21 +30,13 @@ import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 import website.watchmyhealth.watchmyhealth.NavigationDrawerFragment;
 import website.watchmyhealth.watchmyhealth.R;
 import website.watchmyhealth.watchmyhealth.fragment.FragmentMap;
 import website.watchmyhealth.watchmyhealth.fragment.FragmentProfil;
 import website.watchmyhealth.watchmyhealth.fragment.FragmentTest;
 import website.watchmyhealth.watchmyhealth.fragment.FragmentTest2;
+import website.watchmyhealth.watchmyhealth.service.ServiceSync;
 
 
 /**
@@ -56,21 +49,7 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
-
-    /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
-     */
     private CharSequence mTitle;
-    private AQuery aq;
-    private TextView tvEmail;
-    private TextView tvDateNaissance;
-    private TextView tvTaille;
-    private TextView tvPoids;
-    private final String EXTRA_USER_TV_MAIL = "EXTRA_USER_TV_MAIL";
-    private final String EXTRA_USER_TV_DATE_NAISSANCE = "EXTRA_USER_TV_DATE_NAISSANCE";
-    private final String EXTRA_USER_TV_POIDS = "EXTRA_USER_TV_POIDS";
-    private final String EXTRA_USER_TV_TAILLE = "EXTRA_USER_TV_TAILLE";
-
     private final String MESSAGE1_PATH = "/message1";
     private GoogleApiClient apiClient;
     private NodeApi.NodeListener nodeListener;
@@ -85,7 +64,7 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         setContentView(R.layout.activity_home);
         Intent intent = getIntent();
         if( intent.getExtras() !=null){
-                System.out.println("intent ===========================================================================  go to fragment !");
+                //Si on est sur l'activity ProfilModif et qu'on sauvegarde les modifications on doit retourner sur le FragmentProfil et non dans la page Home , on transmet donc cette info via cet Intent
                 onNavigationDrawerItemSelected(intent.getIntExtra("GO_TO_FRAGMENT_PROFIL", 3));
                 intent.getExtras().remove("GO_TO_FRAGMENT_PROFIL");
         }
@@ -93,13 +72,6 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         mTitle = getTitle();
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer,(DrawerLayout) findViewById(R.id.drawer_layout));
-        aq = new AQuery(this);
-
-        /*A mettre dans des boutons*/
-        //asyncJson();
-        async_post();
-        System.out.println("asynch POST");
-
         handler = new Handler();
 
 
@@ -111,22 +83,20 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        System.out.println("Peer connecté");
+                        System.out.println("Peer connecte");
                     }
                 });
             }
-
             @Override
             public void onPeerDisconnected(Node node) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        System.out.println("Peer déconnecté");
+                        System.out.println("Peer deconnecte");
                     }
                 });
             }
         };
-
         // Create MessageListener that receives messages sent from a wearable
         messageListener = new MessageApi.MessageListener() {
             @Override
@@ -148,7 +118,7 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
                     public void onResult(NodeApi.GetConnectedNodesResult getConnectedNodesResult) {
                         if (getConnectedNodesResult.getStatus().isSuccess() && getConnectedNodesResult.getNodes().size() > 0) {
                             remoteNodeId = getConnectedNodesResult.getNodes().get(0).getId();
-                            System.out.println("Connecté");
+                            System.out.println("Connecte");
                         }
                     }
                 });
@@ -162,12 +132,14 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
             @Override
             public void onConnectionFailed(ConnectionResult connectionResult) {
                 if (connectionResult.getErrorCode() == ConnectionResult.API_UNAVAILABLE)
-                    System.out.println("Connexion échoué");
+                    System.out.println("Connexion echoue");
             }
         }).addApi(Wearable.API).build();
 
         apiClient.connect();
     }
+
+
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
@@ -242,19 +214,24 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
 
 
     long timeWhenStopped = 0;
-
     public void startChronometer(View view) {
         ((Chronometer) findViewById(R.id.chronometer1)).setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
-        ((Chronometer) findViewById(R.id.chronometer1)).start();
-
         System.out.println("Envoie message");
         sync_smartwatch();
-
+        LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+        //Permet de demarrer le service qui va recuperer la geolocalisation
+        if(!manager.isProviderEnabled( LocationManager.GPS_PROVIDER )){
+            createGpsDisabledAlert();
+        }
+        Toast.makeText(this,"Début de la séance de sport",Toast.LENGTH_LONG).show();
     }
 
     public void stopChronometer(View view) {
         timeWhenStopped = ((Chronometer) findViewById(R.id.chronometer1)).getBase() - SystemClock.elapsedRealtime();
         ((Chronometer) findViewById(R.id.chronometer1)).stop();
+        //Permet d'arreter le service qui recupere la geolocalisation
+        this.stopService(new Intent(this, ServiceSync.class));
+        Toast.makeText(this, "Fin de la sécance de sport", Toast.LENGTH_LONG).show();
     }
 
     public void resetChronometer(View view) {
@@ -262,99 +239,7 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         timeWhenStopped = 0;
     }
 
-    // Button to be redirected to ProfilModif.java
-    public void goToModifyUserProfile(View view) {
-
-
-        tvEmail = (TextView)findViewById(R.id.tvEmail);
-        tvDateNaissance = (TextView)findViewById(R.id.tvDateNaissance);
-        tvTaille =(TextView)findViewById(R.id.tvTaille);
-        tvPoids=(TextView)findViewById(R.id.tvPoids);
-        Intent redirectModify = new Intent(this, ProfilModif.class);
-        redirectModify.putExtra(EXTRA_USER_TV_MAIL,tvEmail.getText().toString());
-        redirectModify.putExtra(EXTRA_USER_TV_DATE_NAISSANCE,tvDateNaissance.getText());
-        redirectModify.putExtra(EXTRA_USER_TV_POIDS,tvPoids.getText());
-        redirectModify.putExtra(EXTRA_USER_TV_TAILLE, tvTaille.getText());
-        startActivity(redirectModify);
-    }
-
-    // Button to be redirected to FragmentProfile.java
-    // and to update all the data
-//    public void confirmModifyUserProfile(View view) {
-//        /*Intent confirmModifications = new Intent(this, FragmentProfile.class);
-//        startActivity(confirmModifications);
-//        this.finish();
-//        *//*
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        Fragment fragment = (Fragment)new FragmentProfile();
-//        fragmentManager.beginTransaction().replace(R.id.container, fragment).addToBackStack("tag").commit();*/
-//    }
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-//    public static class PlaceholderFragment extends Fragment {
-//        /**
-//         * The fragment argument representing the section number for this
-//         * fragment.
-//         */
-//        private static final String ARG_SECTION_NUMBER = "section_number";
-//
-//        /**
-//         * Returns a new instance of this fragment for the given section
-//         * number.
-//         */
-//        public static PlaceholderFragment newInstance(int sectionNumber) {
-//            PlaceholderFragment fragment = new PlaceholderFragment();
-//            Bundle args = new Bundle();
-//            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-//            fragment.setArguments(args);
-//            return fragment;
-//        }
-//
-//        public PlaceholderFragment() {
-//        }
-//
-//        @Override
-//        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                                 Bundle savedInstanceState) {
-//            View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-//            return rootView;
-//        }
-//
-//        @Override
-//        public void onAttach(Activity activity) {
-//            super.onAttach(activity);
-//            ((Home) activity).onSectionAttached(
-//                    getArguments().getInt(ARG_SECTION_NUMBER));
-//        }
-//    }
-
-    public void asyncJson(){
-
-        //perform a Google search in just a few lines of code
-
-        String url = "http://192.168.0.46:8080/smartwatchproject/test";
-        aq.ajax(url, JSONArray.class, new AjaxCallback<JSONArray>() {
-
-            @Override
-            public void callback(String url, JSONArray json, AjaxStatus status) {
-                if(json != null){
-                    Map<String, Object> params = new HashMap<String, Object>();
-
-                    params.get("utilisateur");
-                    System.out.println(params.get("utilisateur"));
-                    //successful ajax call, show status code and json content
-                    Toast.makeText(aq.getContext(), status.getCode() + ":" + json.toString(), Toast.LENGTH_LONG).show();
-                }else{
-                    //ajax error, show error code
-                    Toast.makeText(aq.getContext(), "Error:" + status.getCode(), Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-
-    }
-
-    public void async_post(){
+/*    public void async_post(){
         //do a twiiter search with a http post
         String url = "http://172.19.150.235:8080/SmartHealth---Web-App/test";
         int idUser = 1201;
@@ -373,9 +258,6 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         params.put("latitude",latitude);
         params.put("longitude",longitude);
         params.put("podometre", nbPas);
-
-
-
         aq.ajax(url, params, JSONObject.class, new AjaxCallback<JSONObject>() {
             @Override
             public void callback(String url, JSONObject json, AjaxStatus status) {
@@ -384,24 +266,40 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
             }
         });
 
+    }*/
+    private void createGpsDisabledAlert() {
+        AlertDialog.Builder localBuilder = new AlertDialog.Builder(this);
+        localBuilder.setMessage("Activer le GPS avant de commencer votre séance").setCancelable(false).setPositiveButton("Activer GPS ",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                        startActivity(new Intent("android.settings.LOCATION_SOURCE_SETTINGS"));
+                        /** Test si le gps est activé on lance le service sinon on lance un Toast pour lui indiquer d'activer le GPS*/
+                        ((Chronometer) findViewById(R.id.chronometer1)).start();
+                        Home.this.startService(new Intent(Home.this, ServiceSync.class));
+                    }
+                }
+        );
+        localBuilder.create().show();
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager= (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     public void sync_smartwatch() {
-
         System.out.println("SMARTWATCH");
-
-
         Wearable.MessageApi.sendMessage(apiClient, remoteNodeId, MESSAGE1_PATH, null).setResultCallback(new ResultCallback<MessageApi.SendMessageResult>() {
             @Override
             public void onResult(MessageApi.SendMessageResult sendMessageResult) {
                 if (sendMessageResult.getStatus().isSuccess())
-                    System.out.println("Message envoyé");
+                    System.out.println("Message envoye");
                 else
-                    System.out.println("Message non envoyé");
+                    System.out.println("Message non envoye");
             }
         });
     }
-
 
 }
 
