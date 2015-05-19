@@ -223,7 +223,7 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         if(!manager.isProviderEnabled( LocationManager.GPS_PROVIDER )){
             createGpsDisabledAlert();
         }
-        Toast.makeText(this,"Début de la séance de sport",Toast.LENGTH_LONG).show();
+        Toast.makeText(this,"Debut de la seance de sport",Toast.LENGTH_LONG).show();
     }
 
     public void stopChronometer(View view) {
@@ -231,7 +231,7 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         ((Chronometer) findViewById(R.id.chronometer1)).stop();
         //Permet d'arreter le service qui recupere la geolocalisation
         this.stopService(new Intent(this, ServiceSync.class));
-        Toast.makeText(this, "Fin de la sécance de sport", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Fin de la seance de sport", Toast.LENGTH_LONG).show();
     }
 
     public void resetChronometer(View view) {
@@ -269,11 +269,11 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
     }*/
     private void createGpsDisabledAlert() {
         AlertDialog.Builder localBuilder = new AlertDialog.Builder(this);
-        localBuilder.setMessage("Activer le GPS avant de commencer votre séance").setCancelable(false).setPositiveButton("Activer GPS ",
+        localBuilder.setMessage("Activer le GPS avant de commencer votre seance").setCancelable(false).setPositiveButton("Activer GPS ",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface paramDialogInterface, int paramInt) {
                         startActivity(new Intent("android.settings.LOCATION_SOURCE_SETTINGS"));
-                        /** Test si le gps est activé on lance le service sinon on lance un Toast pour lui indiquer d'activer le GPS*/
+                        /** Test si le gps est active on lance le service sinon on lance un Toast pour lui indiquer d'activer le GPS*/
                         ((Chronometer) findViewById(R.id.chronometer1)).start();
                         Home.this.startService(new Intent(Home.this, ServiceSync.class));
                     }
