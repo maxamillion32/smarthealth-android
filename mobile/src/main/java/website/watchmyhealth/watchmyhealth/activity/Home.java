@@ -9,6 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Chronometer;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidquery.AQuery;
@@ -50,13 +52,19 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private CharSequence mTitle;
-    private final String MESSAGE1_PATH = "/message1";
-    private GoogleApiClient apiClient;
-    private NodeApi.NodeListener nodeListener;
-    private String remoteNodeId;
-    private MessageApi.MessageListener messageListener;
-    private Handler handler;
+    private TextView mTextViewHeart;
+    private TextView mTextViewStep;
 
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if(mTextViewStep!=null)
+                mTextViewStep.setText(Integer.toString(DataLayerListenerService.getCurrentValueStep()));
+
+            if(mTextViewHeart!=null)
+                mTextViewHeart.setText(Integer.toString(DataLayerListenerService.getCurrentValueHeart()));
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,72 +79,8 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         mNavigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
         // Set up the drawer.
-        mNavigationDrawerFragment.setUp(R.id.navigation_drawer,(DrawerLayout) findViewById(R.id.drawer_layout));
-        handler = new Handler();
+        mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
 
-
-        // Create NodeListener that enables buttons when a node is connected and disables buttons when a node is disconnected
-        nodeListener = new NodeApi.NodeListener() {
-            @Override
-            public void onPeerConnected(Node node) {
-                remoteNodeId = node.getId();
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        System.out.println("Peer connecte");
-                    }
-                });
-            }
-            @Override
-            public void onPeerDisconnected(Node node) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        System.out.println("Peer deconnecte");
-                    }
-                });
-            }
-        };
-        // Create MessageListener that receives messages sent from a wearable
-        messageListener = new MessageApi.MessageListener() {
-            @Override
-            public void onMessageReceived(MessageEvent messageEvent) {
-                System.out.println(messageEvent.getPath());
-            }
-        };
-
-        // Create GoogleApiClient
-        apiClient = new GoogleApiClient.Builder(getApplicationContext()).addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-            @Override
-            public void onConnected(Bundle bundle) {
-                // Register Node and Message listeners
-                Wearable.NodeApi.addListener(apiClient, nodeListener);
-                Wearable.MessageApi.addListener(apiClient, messageListener);
-                // If there is a connected node, get it's id that is used when sending messages
-                Wearable.NodeApi.getConnectedNodes(apiClient).setResultCallback(new ResultCallback<NodeApi.GetConnectedNodesResult>() {
-                    @Override
-                    public void onResult(NodeApi.GetConnectedNodesResult getConnectedNodesResult) {
-                        if (getConnectedNodesResult.getStatus().isSuccess() && getConnectedNodesResult.getNodes().size() > 0) {
-                            remoteNodeId = getConnectedNodesResult.getNodes().get(0).getId();
-                            System.out.println("Connecte");
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void onConnectionSuspended(int i) {
-                System.out.println("Connexion suspendue");
-            }
-        }).addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
-            @Override
-            public void onConnectionFailed(ConnectionResult connectionResult) {
-                if (connectionResult.getErrorCode() == ConnectionResult.API_UNAVAILABLE)
-                    System.out.println("Connexion echoue");
-            }
-        }).addApi(Wearable.API).build();
-
-        apiClient.connect();
     }
 
 
@@ -216,14 +160,15 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
     long timeWhenStopped = 0;
     public void startChronometer(View view) {
         ((Chronometer) findViewById(R.id.chronometer1)).setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
-        System.out.println("Envoie message");
-        sync_smartwatch();
         LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
         //Permet de demarrer le service qui va recuperer la geolocalisation
         if(!manager.isProviderEnabled( LocationManager.GPS_PROVIDER )){
             createGpsDisabledAlert();
         }
         Toast.makeText(this,"Debut de la seance de sport",Toast.LENGTH_LONG).show();
+        mTextViewHeart = (TextView) findViewById(R.id.heartbeat);
+        mTextViewStep = (TextView) findViewById(R.id.stepcount);
+        DataLayerListenerService.setHandler(handler);
     }
 
     public void stopChronometer(View view) {
@@ -232,6 +177,7 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         //Permet d'arreter le service qui recupere la geolocalisation
         this.stopService(new Intent(this, ServiceSync.class));
         Toast.makeText(this, "Fin de la seance de sport", Toast.LENGTH_LONG).show();
+        DataLayerListenerService.setHandler(null);
     }
 
     public void resetChronometer(View view) {
@@ -286,19 +232,6 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         ConnectivityManager connectivityManager= (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-    public void sync_smartwatch() {
-        System.out.println("SMARTWATCH");
-        Wearable.MessageApi.sendMessage(apiClient, remoteNodeId, MESSAGE1_PATH, null).setResultCallback(new ResultCallback<MessageApi.SendMessageResult>() {
-            @Override
-            public void onResult(MessageApi.SendMessageResult sendMessageResult) {
-                if (sendMessageResult.getStatus().isSuccess())
-                    System.out.println("Message envoye");
-                else
-                    System.out.println("Message non envoye");
-            }
-        });
     }
 
 }

@@ -20,7 +20,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".HeartbeatService"/>
+
+        <service android:name=".SensorsService"/>
     </application>
 
 </manifest>

@@ -118,6 +118,50 @@
                 android:layout_column="1" />
         </TableRow>
 
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="50dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fréq. cardiaque : "
+                android:id="@+id/textView3"
+                android:textSize="25dp"
+                android:layout_column="0" />
+
+            <TextView
+                android:layout_width="137dp"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:id="@+id/heartbeat"
+                android:textSize="25dp"
+                android:layout_column="1" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="50dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre de pas : "
+                android:id="@+id/textView4"
+                android:textSize="25dp"
+                android:layout_column="0" />
+
+            <TextView
+                android:layout_width="137dp"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:id="@+id/stepcount"
+                android:textSize="25dp"
+                android:layout_column="1" />
+        </TableRow>
+
     </TableLayout>
 
     <LinearLayout
