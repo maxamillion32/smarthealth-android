@@ -31,6 +31,7 @@
     <uses-permission android:name="android.permission.ACCESS_ASSISTED_GPS" />
     <uses-permission android:name="android.permission.LOCATION" />
 
+<<<<<<< HEAD
 
     <application android:allowBackup="true" android:icon="@mipmap/ic_launcher" android:label="@string/app_name" android:theme="@style/AppTheme" >
         <service android:name=".service.ServiceSync"/>
@@ -39,12 +40,75 @@
             android:label="@string/title_activity_login" >
         </activity>
         <activity android:name=".activity.ProfilModif"
+=======
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme"
+        android:name=".SampleApplication">
+        <service android:name=".service.ServiceSync"/>
+        <activity
+            android:name=".activity.LoginProfileActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <service android:name=".activity.DataLayerListenerService" >
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
+            </intent-filter>
+        </service>
+        <activity
+            android:name="com.parse.ui.ParseLoginActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop">
+            <meta-data
+                android:name="com.parse.ui.ParseLoginActivity.PARSE_LOGIN_ENABLED"
+                android:value="true"/>
+            <meta-data
+                android:name="com.parse.ui.ParseLoginActivity.PARSE_LOGIN_EMAIL_AS_USERNAME"
+                android:value="true"/>
+            <meta-data
+                android:name="com.parse.ui.ParseLoginActivity.FACEBOOK_LOGIN_ENABLED"
+                android:value="true"/>
+            <meta-data
+                android:name="com.parse.ui.ParseLoginActivity.TWITTER_LOGIN_ENABLED"
+                android:value="true"/>
+        </activity>
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:label="@string/app_name" />
+
+        <meta-data
+            android:name="com.parse.APPLICATION_ID"
+            android:value="@string/parse_app_id" />
+        <meta-data
+            android:name="com.parse.CLIENT_KEY"
+            android:value="@string/parse_client_key" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
+        <!--<activity
+            android:name=".activity.LoginActivity"
+            android:label="@string/title_activity_login" >
+        </activity>-->
+        <!--<activity
+            android:name=".activity.ProfilModif"
+>>>>>>> 696db62d805423a2e899dbf5aaf370e765b2ecc8
             android:uiOptions="splitActionBarWhenNarrow"
             android:parentActivityName=".activity.Home"
             android:label="@string/title_activity_profil_modif" >
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.Home"/>
         </activity>
+<<<<<<< HEAD
         <activity android:name=".activity.Home"
             android:label="@string/app_name">
             <intent-filter>
@@ -52,6 +116,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+=======
+        <activity
+        android:name=".activity.Home"
+        android:label="@string/app_name">
+
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>-->
+>>>>>>> 696db62d805423a2e899dbf5aaf370e765b2ecc8
 
         <!--FABRICE-->
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCTe0y36kwOb7XpBqDHOYPDP5zbQ-l1W5w" />

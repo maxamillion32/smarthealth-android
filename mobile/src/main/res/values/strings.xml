@@ -34,5 +34,17 @@
     <string name="message2_sent">Message 2 sent.</string>
     <string name="error_message2">Error sending message 2.</string>
     <string name="wearable_api_unavailable">Wearable API is unavailable.</string>
->>>>>>> 5439dac58eb6b3e370592e7f2a847bab0bdbd56d
+
+    <string name="parse_app_id">0CmUyGsBfRyh6RpdAopNz2aJ3RsyqGevvGBpkIa9</string>
+    <string name="parse_client_key">aeHFPeiQnxQ6W0DRrKwR4F51X0eiG1ITpDJpkk79</string>
+    <string name="facebook_app_id">838961199485761</string>
+    <string name="twitter_consumer_key">ZkRM4ydc82GejF3MzhH1A4HN7</string>
+    <string name="twitter_consumer_secret">fJZlQgySeur2Wu9NC6tdxVBEonsAZoyd14Lb8fRVDgyO6I1Vf9</string>
+
+    <string name="profile_logo_content_description">Logo</string>
+    <string name="profile_title_logged_in">Vous êtes connecté en tant que</string>
+    <string name="profile_logout_button_label">Se déconnecter</string>
+    <string name="profile_title_logged_out">Vous devez être connecté pour voir votre profil</string>
+    <string name="profile_login_button_label">Se connecter</string>
+
 </resources>
