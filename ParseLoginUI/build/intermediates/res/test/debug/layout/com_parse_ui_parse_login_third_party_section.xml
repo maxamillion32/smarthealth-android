@@ -18,4 +18,4 @@
         android:text="@string/com_parse_ui_twitter_login_button_label"
         android:visibility="gone" />
 </merge>
-<!-- From: file:/C:/Users/Yoann/Documents/SmartHealth%2D%2D-Android-App/ParseLoginUI/res/layout/com_parse_ui_parse_login_third_party_section.xml --><!-- From: file:/C:/Users/Yoann/Documents/SmartHealth%2D%2D-Android-App/ParseLoginUI/build/intermediates/bundles/debug/res/layout/com_parse_ui_parse_login_third_party_section.xml -->
+<!-- From: file:/C:/Users/Fabrice/Documents/GitHub/SmartHealth%2D%2D-Android-App/ParseLoginUI/res/layout/com_parse_ui_parse_login_third_party_section.xml --><!-- From: file:/C:/Users/Fabrice/Documents/GitHub/SmartHealth%2D%2D-Android-App/ParseLoginUI/build/intermediates/bundles/debug/res/layout/com_parse_ui_parse_login_third_party_section.xml -->
