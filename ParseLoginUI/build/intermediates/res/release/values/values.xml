@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/C:/Users/Yoann/Documents/SmartHealth%2D%2D-Android-App/ParseLoginUI/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.0.1/res/values/values.xml -->
+    <!-- From: file:/C:/Users/Fabrice/Documents/GitHub/SmartHealth%2D%2D-Android-App/ParseLoginUI/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.0.1/res/values/values.xml -->
     <eat-comment/>
     <color name="com_facebook_blue">#3B5998</color>
     <color name="com_facebook_button_background_color">#415dae</color>
@@ -15,7 +15,7 @@
     <color name="com_facebook_likeboxcountview_text_color">#6a7180</color>
     <color name="com_facebook_likeview_text_color">#6a7180</color>
     <color name="com_facebook_share_button_text_color">#FFFFFF</color>
-    <!-- From: file:/C:/Users/Yoann/Documents/SmartHealth%2D%2D-Android-App/ParseLoginUI/res/values/colors.xml -->
+    <!-- From: file:/C:/Users/Fabrice/Documents/GitHub/SmartHealth%2D%2D-Android-App/ParseLoginUI/res/values/colors.xml -->
     <eat-comment/>
     <color name="com_parse_ui_facebook_login_button">#3B5998</color>
     <color name="com_parse_ui_facebook_login_button_focus">#304F8B</color>
@@ -34,7 +34,7 @@
     <declare-styleable name="com_facebook_like_view"><attr format="color" name="foreground_color"/><attr format="string" name="object_id"/><attr name="object_type"><enum name="unknown" value="0"/><enum name="open_graph" value="1"/><enum name="page" value="2"/></attr><attr name="style"><enum name="standard" value="0"/><enum name="button" value="1"/><enum name="box_count" value="2"/></attr><attr name="auxiliary_view_position"><enum name="bottom" value="0"/><enum name="inline" value="1"/><enum name="top" value="2"/></attr><attr name="horizontal_alignment"><enum name="center" value="0"/><enum name="left" value="1"/><enum name="right" value="2"/></attr></declare-styleable>
     <declare-styleable name="com_facebook_login_view"><attr format="boolean" name="confirm_logout"/><attr format="string" name="login_text"/><attr format="string" name="logout_text"/><attr name="tooltip_mode"><enum name="automatic" value="0"/><enum name="display_always" value="1"/><enum name="never_display" value="2"/></attr></declare-styleable>
     <declare-styleable name="com_facebook_profile_picture_view"><attr name="preset_size"><enum name="small" value="-2"/><enum name="normal" value="-3"/><enum name="large" value="-4"/></attr><attr format="boolean" name="is_cropped"/></declare-styleable>
-    <!-- From: file:/C:/Users/Yoann/Documents/SmartHealth%2D%2D-Android-App/ParseLoginUI/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.0.1/res/values/values.xml -->
+    <!-- From: file:/C:/Users/Fabrice/Documents/GitHub/SmartHealth%2D%2D-Android-App/ParseLoginUI/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.0.1/res/values/values.xml -->
     <eat-comment/>
     <dimen name="com_facebook_likeboxcountview_border_radius">3dp</dimen>
     <dimen name="com_facebook_likeboxcountview_border_width">1dp</dimen>
@@ -55,7 +55,7 @@
     <dimen name="com_facebook_share_button_padding_top">12dp</dimen>
     <dimen name="com_facebook_share_button_text_size">16.0sp</dimen>
     <dimen name="com_facebook_tooltip_horizontal_padding">10dp</dimen>
-    <!-- From: file:/C:/Users/Yoann/Documents/SmartHealth%2D%2D-Android-App/ParseLoginUI/res/values/dimens.xml -->
+    <!-- From: file:/C:/Users/Fabrice/Documents/GitHub/SmartHealth%2D%2D-Android-App/ParseLoginUI/res/values/dimens.xml -->
     <eat-comment/>
     <dimen name="com_parse_ui_horizontal_margin">16dp</dimen>
     <dimen name="com_parse_ui_large_vertical_spacing">24dp</dimen>
@@ -64,13 +64,13 @@
     <dimen name="com_parse_ui_vertical_margin">16dp</dimen>
     <dimen name="com_parse_ui_vertical_spacing">16dp</dimen>
     <dimen name="com_parse_ui_xlarge_vertical_spacing">36dp</dimen>
-    <!-- From: file:/C:/Users/Yoann/Documents/SmartHealth%2D%2D-Android-App/ParseLoginUI/res/values/strings.xml -->
+    <!-- From: file:/C:/Users/Fabrice/Documents/GitHub/SmartHealth%2D%2D-Android-App/ParseLoginUI/res/values/strings.xml -->
     <eat-comment/>
     <plurals name="com_parse_ui_password_too_short_toast">
         <item quantity="one">Le mot de passe doit avoir au moins %d caractère</item>
         <item quantity="other">Le mot de passe doit avoir au moins %d caractères</item>
     </plurals>
-    <!-- From: file:/C:/Users/Yoann/Documents/SmartHealth%2D%2D-Android-App/ParseLoginUI/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.0.1/res/values/values.xml -->
+    <!-- From: file:/C:/Users/Fabrice/Documents/GitHub/SmartHealth%2D%2D-Android-App/ParseLoginUI/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.0.1/res/values/values.xml -->
     <eat-comment/>
     <string name="com_facebook_image_download_unknown_error">Unexpected error while downloading an image.</string>
     <string name="com_facebook_internet_permission_error_message">WebView login requires INTERNET permission</string>
@@ -88,7 +88,7 @@
     <string name="com_facebook_send_button_text">Send</string>
     <string name="com_facebook_share_button_text">Share</string>
     <string name="com_facebook_tooltip_default">New! You\'re in control - choose what info you want to share with apps.</string>
-    <!-- From: file:/C:/Users/Yoann/Documents/SmartHealth%2D%2D-Android-App/ParseLoginUI/res/values/strings.xml -->
+    <!-- From: file:/C:/Users/Fabrice/Documents/GitHub/SmartHealth%2D%2D-Android-App/ParseLoginUI/res/values/strings.xml -->
     <eat-comment/>
     <string name="com_parse_ui_confirm_password_input_hint">Re-tapez votre mot de passe</string>
     <string name="com_parse_ui_create_account_button_label">Créer un compte</string>
@@ -140,7 +140,7 @@
     <string name="com_parse_ui_twitter_login_failed_toast">Connexion à Twitter échouée</string>
     <string name="com_parse_ui_username_input_hint">Pseudonyme / Email</string>
     <string name="com_parse_ui_username_taken_toast">Nom d\'utilisateur déjà existant, veuillez en choisir un autre</string>
-    <!-- From: file:/C:/Users/Yoann/Documents/SmartHealth%2D%2D-Android-App/ParseLoginUI/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.0.1/res/values/values.xml -->
+    <!-- From: file:/C:/Users/Fabrice/Documents/GitHub/SmartHealth%2D%2D-Android-App/ParseLoginUI/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.0.1/res/values/values.xml -->
     <eat-comment/>
     <string name="messenger_send_button_text">Send</string>
     <style name="MessengerButton">
@@ -201,7 +201,7 @@
     <style name="MessengerButtonText.White.Small">
     <item name="android:drawableLeft">@drawable/messenger_bubble_small_blue</item>
   </style>
-    <!-- From: file:/C:/Users/Yoann/Documents/SmartHealth%2D%2D-Android-App/ParseLoginUI/res/values/styles.xml -->
+    <!-- From: file:/C:/Users/Fabrice/Documents/GitHub/SmartHealth%2D%2D-Android-App/ParseLoginUI/res/values/styles.xml -->
     <eat-comment/>
     <style name="ParseLoginUI"/>
     <style name="ParseLoginUI.Button" parent="@android:style/Widget.Button">
@@ -233,7 +233,7 @@
         <item name="android:textColor">@color/com_parse_ui_parse_login_display_text</item>
         <item name="android:textSize">18sp</item>
     </style>
-    <!-- From: file:/C:/Users/Yoann/Documents/SmartHealth%2D%2D-Android-App/ParseLoginUI/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.0.1/res/values/values.xml -->
+    <!-- From: file:/C:/Users/Fabrice/Documents/GitHub/SmartHealth%2D%2D-Android-App/ParseLoginUI/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.0.1/res/values/values.xml -->
     <eat-comment/>
     <style name="com_facebook_button" parent="@android:style/Widget.Button">
         <item name="android:background">@drawable/com_facebook_button_background</item>

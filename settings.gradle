@@ -1,1 +1,1 @@
-include 'ParseLoginUI'
+include ':mobile', ':wear', 'ParseLoginUI', ':ParseLoginUI'
