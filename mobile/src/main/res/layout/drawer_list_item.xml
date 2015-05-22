@@ -13,15 +13,31 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/text1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:textAppearance="?android:attr/textAppearanceListItemSmall"
     android:gravity="center_vertical"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:textColor="#fff"
-    android:background="?android:attr/activatedBackgroundIndicator"
-    android:minHeight="?android:attr/listPreferredItemHeightSmall"/>
+    android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+    android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+    android:minHeight="?android:attr/listPreferredItemHeightSmall"
+    android:background="@drawable/navigation_row_selector"
+    android:textColor="@drawable/navigation_row_text_color_selector"
+
+    />
+
+<!--<TextView xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:id="@+id/text_list_item"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:textAppearance="?android:attr/textAppearanceListItemSmall"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:paddingLeft="16dp"-->
+    <!--android:paddingRight="16dp"-->
+    <!--android:textColor="#838383"-->
+    <!--android:background="?android:attr/activatedBackgroundIndicator"-->
+
+    <!--android:minHeight="?android:attr/listPreferredItemHeightSmall" />-->
+
+

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 import android.widget.Toast;
 
 /**
@@ -18,14 +19,12 @@ public class ConnectionChangeReceiver extends BroadcastReceiver
     {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService( Context.CONNECTIVITY_SERVICE );
         NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
-        NetworkInfo mobNetInfo = connectivityManager.getNetworkInfo(     ConnectivityManager.TYPE_MOBILE );
-        if ( activeNetInfo != null )
+//        NetworkInfo mobNetInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE );
+        if ( activeNetInfo != null)
         {
+            System.out.println("////////////////////////// Dans ConnectionChangeReceiver.java1 \"////////////////////////// ");
+            //envoyer les donnees sauvegarder dans les fichiers
             Toast.makeText(context, "Active Network Type : " + activeNetInfo.getTypeName(), Toast.LENGTH_SHORT).show();
-        }
-        if( mobNetInfo != null )
-        {
-            Toast.makeText( context, "Mobile Network Type : " + mobNetInfo.getTypeName(), Toast.LENGTH_SHORT ).show();
         }
     }
 }

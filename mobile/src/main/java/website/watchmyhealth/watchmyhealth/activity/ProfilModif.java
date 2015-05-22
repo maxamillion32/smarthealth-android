@@ -209,7 +209,8 @@ public class ProfilModif extends ActionBarActivity {
         intent.putExtra(EXTRA_USER_MODIF_POIDS, this.modifPoids.getText().toString());
         intent.putExtra(EXTRA_USER_MODIF_DATE_NAISSANCE, this.modifDateNaissance.getText().toString());
         intent.putExtra(EXTRA_USER_MODIF_EMAIL, this.modifMail.getText().toString());
-        intent.putExtra(GO_TO_FRAGMENT_PROFIL, 3);
+        //permet d'indiquer quand lorsqu'on sauvegarde on veut se rendre sur la position 2 du switch onNavigationDrawerItemSelected() dans Home.java
+        intent.putExtra(GO_TO_FRAGMENT_PROFIL, 2);
         if(isNetworkAvailable()){
             async_post();
             saveDataProfilModifInFile();

@@ -1,9 +1,11 @@
 package website.watchmyhealth.watchmyhealth.activity;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -15,6 +17,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +33,8 @@ import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
+
+import website.watchmyhealth.watchmyhealth.ConnectionChangeReceiver;
 import website.watchmyhealth.watchmyhealth.NavigationDrawerFragment;
 import website.watchmyhealth.watchmyhealth.R;
 import website.watchmyhealth.watchmyhealth.fragment.FragmentMap;
@@ -65,7 +70,7 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         Intent intent = getIntent();
         if( intent.getExtras() !=null){
                 //Si on est sur l'activity ProfilModif et qu'on sauvegarde les modifications on doit retourner sur le FragmentProfil et non dans la page Home , on transmet donc cette info via cet Intent
-                onNavigationDrawerItemSelected(intent.getIntExtra("GO_TO_FRAGMENT_PROFIL", 3));
+                onNavigationDrawerItemSelected(intent.getIntExtra("GO_TO_FRAGMENT_PROFIL", 2));
                 intent.getExtras().remove("GO_TO_FRAGMENT_PROFIL");
         }
         mNavigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -73,6 +78,9 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer,(DrawerLayout) findViewById(R.id.drawer_layout));
         handler = new Handler();
+        //si il y a une connexion internet alors on envoi les données sauvegardé dans les fichiers
+        ConnectionChangeReceiver packageReceiver= new ConnectionChangeReceiver();
+        registerReceiver(packageReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
 
 
         // Create NodeListener that enables buttons when a node is connected and disables buttons when a node is disconnected
@@ -139,7 +147,25 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         apiClient.connect();
     }
 
+    private Boolean exit = false;
+    @Override
+    public void onBackPressed() {
+        if (exit) {
+            finish(); // finish activity
+        } else {
+            Toast.makeText(this, "Press Back again to Exit.",
+                    Toast.LENGTH_SHORT).show();
+            exit = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    exit = false;
+                }
+            }, 3 * 1000);
 
+        }
+
+    }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
@@ -155,21 +181,14 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
                 mTitle = getString(R.string.navigation_accueil);
                 break;
             case 1:
-                fragment = new FragmentTest2();
-                mTitle = getString(R.string.navigation_graphique);
-                break;
-            case 2:
                 fragment = new FragmentMap();
                 mTitle = getString(R.string.navigation_map);
                 break;
-            case 3: //attention, si on change de "case" pour FragmentProfil, le mappage ne se fera plus entre ProfilModif et FragmentProfil ctrl+f = GO_TO_FRAGMENT_PROFIL
+            case 2: //attention, si on change de "case" pour FragmentProfil, le mappage ne se fera plus entre ProfilModif et FragmentProfil ctrl+f = GO_TO_FRAGMENT_PROFIL
                 fragment = new FragmentProfil();
                 mTitle = getString(R.string.navigation_profil);
                 break;
-            case 4:
-                fragment = new FragmentProfil();
-                mTitle = getString(R.string.navigation_a_propos);
-                break;
+
         }
         fragmentManager.beginTransaction().replace(R.id.container, fragment).addToBackStack("tag").commit();
 
