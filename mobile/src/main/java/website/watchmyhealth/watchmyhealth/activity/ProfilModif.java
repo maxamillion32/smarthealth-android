@@ -29,8 +29,10 @@ import com.androidquery.callback.AjaxStatus;
 
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -43,6 +45,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import website.watchmyhealth.watchmyhealth.R;
+import website.watchmyhealth.watchmyhealth.ServerSync;
 
 
 public class ProfilModif extends ActionBarActivity {
@@ -52,18 +55,20 @@ public class ProfilModif extends ActionBarActivity {
     private EditText modifPoids;
     private EditText modifTaille;
     private EditText modifMail;
-
+    private EditText modifNom;
+    private EditText modifPrenom;
     private DatePickerDialog fromDatePickerDialog;
     private Dialog dialogPoids;
     private Dialog dialogTaille;
     private NumberPicker npTaille;
     private NumberPicker nbPoids;
-    private AQuery aq;
     private Intent intent;
     private final String EXTRA_USER_MODIF_EMAIL = "EXTRA_USER_MODIF_EMAIL";
     private final String EXTRA_USER_MODIF_POIDS = "EXTRA_USER_MODIF_POIDS";
     private final String EXTRA_USER_MODIF_TAILLE = "EXTRA_USER_MODIF_TAILLE";
     private final String EXTRA_USER_MODIF_DATE_NAISSANCE = "EXTRA_USER_MODIF_DATE_NAISSANCE";
+    private final String EXTRA_USER_MODIF_NOM = "EXTRA_USER_MODIF_NOM";
+    private final String EXTRA_USER_MODIF_PRENOM = "EXTRA_USER_MODIF_PRENOM";
     private final String GO_TO_FRAGMENT_PROFIL = "GO_TO_FRAGMENT_PROFIL";
 
 
@@ -85,8 +90,11 @@ public class ProfilModif extends ActionBarActivity {
         //recuperation du poids de l'utilisateur
         modifPoids = (EditText) findViewById(R.id.modifPoids);
         modifPoids.setInputType(InputType.TYPE_NULL);
+        //recuperation du nom et prenom
+        modifNom = (EditText) findViewById(R.id.modifNom);
+        modifPrenom = (EditText) findViewById(R.id.modifPrenom);
+
         //instanciation de la class AQuery permettant de faire des requete ajax sur un serveur
-        aq = new AQuery(this);
         Intent intentFromProfil = getIntent();
         if( intentFromProfil.getExtras() !=null){
             //On r&eacute;cup&eacute;re les donn&eacute;es de la page de profil afin de les mettre dans des EditText afin de les modifier
@@ -94,6 +102,8 @@ public class ProfilModif extends ActionBarActivity {
             this.modifDateNaissance.setText(intentFromProfil.getStringExtra("EXTRA_USER_TV_DATE_NAISSANCE"));
             this.modifPoids.setText(intentFromProfil.getStringExtra("EXTRA_USER_TV_POIDS"));
             this.modifTaille.setText(intentFromProfil.getStringExtra("EXTRA_USER_TV_TAILLE"));
+            this.modifNom.setText(intentFromProfil.getStringExtra("EXTRA_USER_TV_NOM"));
+            this.modifPrenom.setText(intentFromProfil.getStringExtra("EXTRA_USER_TV_PRENOM"));
         }
         setDateTimeField();
         setModifPoids();
@@ -202,10 +212,10 @@ public class ProfilModif extends ActionBarActivity {
         });
     }
     public void confirmModifyUserProfile(View view) {
-        System.out.println(this.modifTaille.getText().toString() + "====================Dans confirmModifyUserProfile ==========================" + this.modifTaille.getText());
         intent = new Intent(this, Home.class);
-
         intent.putExtra(EXTRA_USER_MODIF_TAILLE, modifTaille.getText().toString());
+        intent.putExtra(EXTRA_USER_MODIF_PRENOM, modifPrenom.getText().toString());
+        intent.putExtra(EXTRA_USER_MODIF_NOM, modifNom.getText().toString());
         intent.putExtra(EXTRA_USER_MODIF_POIDS, this.modifPoids.getText().toString());
         intent.putExtra(EXTRA_USER_MODIF_DATE_NAISSANCE, this.modifDateNaissance.getText().toString());
         intent.putExtra(EXTRA_USER_MODIF_EMAIL, this.modifMail.getText().toString());
@@ -213,6 +223,7 @@ public class ProfilModif extends ActionBarActivity {
         intent.putExtra(GO_TO_FRAGMENT_PROFIL, 2);
         if(isNetworkAvailable()){
             async_post();
+            //si la connexion n'est pas disponible la prochaine fois que l'utilisateur retourne sur le profil alors les donnees seront recuperees dans le fichier
             saveDataProfilModifInFile();
         }else{
             saveDataProfilModifInFile();
@@ -221,26 +232,16 @@ public class ProfilModif extends ActionBarActivity {
     }
 
     public void async_post(){
-        //do a twiiter search with a http post
-        String url = "http://192.168.0.12:8080/SmartHealth---Web-App/test";
-        int idUser = 1201;
-        Date date = new Date();
+        ServerSync serverSync = new ServerSync(this);
+        String idUser = "1201";
         //Une appelle de methode d'Async_post pour chaque jour (la date), car il faut envoyer toutes les donnees d'un jour donne en meme temps
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("useFunctionServer", "modificationProfil");
-        params.put("userId", idUser);
-        params.put("dateDuJour", date);
-        params.put("userEmail", this.modifMail.getText());
-        params.put("userDateNaissance", this.modifDateNaissance.getText());
-        params.put("userPoids", this.modifPoids.getText());
-        params.put("userTaille", this.modifTaille.getText());
-
-        aq.ajax(url, params, JSONObject.class, new AjaxCallback<JSONObject>() {
-            @Override
-            public void callback(String url, JSONObject json, AjaxStatus status) {
-                System.out.println("Dans aq.ajax = " + json);
-            }
-        });
+        serverSync.async_post_modif_profil(
+                idUser,
+                this.modifMail.getText().toString(),
+                this.modifDateNaissance.getText().toString(),
+                this.modifPoids.getText().toString(),
+                this.modifTaille.getText().toString()
+        );
     }
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager= (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -254,23 +255,22 @@ public class ProfilModif extends ActionBarActivity {
     public void saveDataProfilModifInFile(){
         FileOutputStream fOut = null;
         OutputStreamWriter osw = null;
-
+        this.deleteFile("settings_profil.dat");
         try{
-            fOut = this.openFileOutput("settings.dat", MODE_PRIVATE);
-            String separator = System.getProperty("line.separator");
+            fOut = this.openFileOutput("settings_profil.dat", MODE_APPEND);
             osw = new OutputStreamWriter(fOut);
-            osw.flush();
+            String separator = System.getProperty("line.separator");
+            osw.append("nom_" + this.modifNom.getText().toString());
+            osw.append(separator);
+            osw.append("prenom_" + this.modifPrenom.getText().toString());
+            osw.append(separator);
             osw.append("taille_" + this.modifTaille.getText().toString());
-            System.out.println("===================System.getProperty(\"line.separator\")===================");
             osw.append(separator);
             osw.append("poids_" + this.modifPoids.getText().toString());
             osw.append(separator);
             osw.append("dateNaissance_" + this.modifDateNaissance.getText().toString());
             osw.append(separator);
             osw.append("mail_" + this.modifMail.getText().toString());
-            System.out.println("poids_" + this.modifPoids.getText().toString());
-            osw.flush();
-            //popup surgissant pour le resultat
             osw.close();
             fOut.close();
         }

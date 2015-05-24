@@ -38,17 +38,25 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent">
 
-                    <TextView
+                    <EditText
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="Thibaut Linares"
-                        android:id="@+id/tvPrenomNom"
-                        android:layout_gravity="center"
-                        android:textSize="30sp"
-                        android:gravity="center_horizontal"
-                        android:typeface="normal"
-                        />
+                        android:inputType="textPersonName"
+                        android:text="Prénom"
+                        android:ems="10"
+                        android:id="@+id/modifPrenom"
+                        android:layout_gravity="left|bottom"
+                        android:hint="Prénom" />
+
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName"
+                        android:text="Nom"
+                        android:ems="10"
+                        android:id="@+id/modifNom"
+                        android:layout_gravity="left|center_vertical"
+                        android:hint="Nom" />
 
                 </FrameLayout>
             </LinearLayout>
@@ -78,7 +86,8 @@
                     android:ems="10"
                     android:id="@+id/modifMail"
                     android:layout_marginLeft="25dp"
-                    android:layout_marginRight="25dp" />
+                    android:layout_marginRight="25dp"
+                    android:hint="Votre email" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -102,7 +111,8 @@
                     android:layout_marginRight="25dp"
                     android:focusableInTouchMode="false"
                     android:enabled="true"
-                    android:focusable="false" />
+                    android:focusable="false"
+                    android:hint="Votre date de naissance" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -126,7 +136,9 @@
                         android:layout_row="0"
                         android:layout_column="0"
                         android:layout_marginLeft="25dp"
-                        android:enabled="true" />
+                        android:enabled="true"
+                        android:hint="Votre taille"
+                        android:editable="false" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -162,7 +174,9 @@
                         android:layout_row="0"
                         android:layout_column="0"
                         android:layout_marginLeft="20dp"
-                        android:enabled="true" />
+                        android:enabled="true"
+                        android:hint="Votre poids"
+                        android:editable="false" />
 
 
                     <TextView

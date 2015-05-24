@@ -1,7 +1,6 @@
 package website.watchmyhealth.watchmyhealth.activity;
 
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,7 +17,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,22 +25,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidquery.AQuery;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.wearable.MessageApi;
-import com.google.android.gms.wearable.MessageEvent;
-import com.google.android.gms.wearable.Node;
-import com.google.android.gms.wearable.NodeApi;
-import com.google.android.gms.wearable.Wearable;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 
 import website.watchmyhealth.watchmyhealth.ConnectionChangeReceiver;
 import website.watchmyhealth.watchmyhealth.NavigationDrawerFragment;
 import website.watchmyhealth.watchmyhealth.R;
 import website.watchmyhealth.watchmyhealth.fragment.FragmentMap;
 import website.watchmyhealth.watchmyhealth.fragment.FragmentProfil;
-import website.watchmyhealth.watchmyhealth.fragment.FragmentTest;
-import website.watchmyhealth.watchmyhealth.fragment.FragmentTest2;
+import website.watchmyhealth.watchmyhealth.fragment.FragmentHome;
 import website.watchmyhealth.watchmyhealth.service.ServiceSync;
 
 
@@ -59,7 +55,11 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
     private CharSequence mTitle;
     private TextView mTextViewHeart;
     private TextView mTextViewStep;
-
+    Fragment fragment;
+    private ConnectionChangeReceiver packageReceiver;
+    FragmentManager fragmentManager;
+    private FileInputStream fIut = null;
+    private InputStreamReader isr = null;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -83,100 +83,48 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         }
         mNavigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
-        // Set up the drawer.
-<<<<<<< HEAD
-        mNavigationDrawerFragment.setUp(R.id.navigation_drawer,(DrawerLayout) findViewById(R.id.drawer_layout));
-        handler = new Handler();
-        //si il y a une connexion internet alors on envoi les données sauvegardé dans les fichiers
-        ConnectionChangeReceiver packageReceiver= new ConnectionChangeReceiver();
-        registerReceiver(packageReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
-
-
-        // Create NodeListener that enables buttons when a node is connected and disables buttons when a node is disconnected
-        nodeListener = new NodeApi.NodeListener() {
-            @Override
-            public void onPeerConnected(Node node) {
-                remoteNodeId = node.getId();
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        System.out.println("Peer connecte");
-                    }
-                });
-            }
-            @Override
-            public void onPeerDisconnected(Node node) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        System.out.println("Peer deconnecte");
-                    }
-                });
-            }
-        };
-        // Create MessageListener that receives messages sent from a wearable
-        messageListener = new MessageApi.MessageListener() {
-            @Override
-            public void onMessageReceived(MessageEvent messageEvent) {
-                System.out.println(messageEvent.getPath());
-            }
-        };
-
-        // Create GoogleApiClient
-        apiClient = new GoogleApiClient.Builder(getApplicationContext()).addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-            @Override
-            public void onConnected(Bundle bundle) {
-                // Register Node and Message listeners
-                Wearable.NodeApi.addListener(apiClient, nodeListener);
-                Wearable.MessageApi.addListener(apiClient, messageListener);
-                // If there is a connected node, get it's id that is used when sending messages
-                Wearable.NodeApi.getConnectedNodes(apiClient).setResultCallback(new ResultCallback<NodeApi.GetConnectedNodesResult>() {
-                    @Override
-                    public void onResult(NodeApi.GetConnectedNodesResult getConnectedNodesResult) {
-                        if (getConnectedNodesResult.getStatus().isSuccess() && getConnectedNodesResult.getNodes().size() > 0) {
-                            remoteNodeId = getConnectedNodesResult.getNodes().get(0).getId();
-                            System.out.println("Connecte");
-                        }
-                    }
-                });
-            }
-=======
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
->>>>>>> 696db62d805423a2e899dbf5aaf370e765b2ecc8
+        //si il y a une connexion internet alors on envoi les donnees sauvegarde dans les fichiers
+            packageReceiver= new ConnectionChangeReceiver();
+            registerReceiver(packageReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
 
     }
-
-    private Boolean exit = false;
-    @Override
-    public void onBackPressed() {
-        if (exit) {
-            finish(); // finish activity
-        } else {
-            Toast.makeText(this, "Press Back again to Exit.",
-                    Toast.LENGTH_SHORT).show();
-            exit = true;
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    exit = false;
-                }
-            }, 3 * 1000);
-
-        }
-
-    }
+// l'utilisateur devra faire un double clique pour sortir de l'application
+// probleme : il devient impossible de cliquer sur le bouton back pour retrourner dans des fragments visites precedemment
+//    private Boolean exit = false;
+//    @Override
+//    public void onBackPressed() {
+//        if(fragment.getClass().toString().endsWith("FragmentHome")){
+//            if (exit) {
+//                finish(); // finish activity
+//            } else {
+//                Toast.makeText(this, "Appuyez encore pour quitter",
+//                        Toast.LENGTH_SHORT).show();
+//                exit = true;
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        exit = false;
+//                    }
+//                }, 3 * 1000);
+//            }
+//        }
+//        else{
+//            fragmentManager.popBackStack();
+//        }
+//    }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-        Fragment fragment = (Fragment)new FragmentTest();
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragment = (Fragment) new FragmentHome();
+        fragmentManager = getSupportFragmentManager();
 
         //fragmentManager.beginTransaction()
         //.replace(R.id.container, PlaceholderFragment.newInstance(position + 1)).commit();
         switch (position) {
             case 0:
-                fragment = new FragmentTest();
+                fragment = new FragmentHome();
                 mTitle = getString(R.string.navigation_accueil);
                 break;
             case 1:
@@ -190,7 +138,6 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
 
         }
         fragmentManager.beginTransaction().replace(R.id.container, fragment).addToBackStack("tag").commit();
-
     }
 
 
@@ -221,12 +168,10 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -239,6 +184,10 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         if(!manager.isProviderEnabled( LocationManager.GPS_PROVIDER )){
             createGpsDisabledAlert();
         }
+        else{
+            this.startService(new Intent(Home.this, ServiceSync.class));
+        }
+        packageReceiver.onReceive(this,new Intent().setAction("activityStarted"));
         Toast.makeText(this,"Debut de la seance de sport",Toast.LENGTH_LONG).show();
         mTextViewHeart = (TextView) findViewById(R.id.heartbeat);
         mTextViewStep = (TextView) findViewById(R.id.stepcount);
@@ -246,10 +195,36 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
     }
 
     public void stopChronometer(View view) {
+        try {
+            fIut = this.openFileInput("save_Time_Longitude_Latitude.dat");
+            isr = new InputStreamReader(fIut);
+            BufferedReader br = new BufferedReader(isr);
+            String strLine="";
+            while ((strLine = br.readLine()) != null) { // while loop begins here
+                System.out.println(strLine);
+            }
+            isr.close();
+            br.close();
+            fIut.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         timeWhenStopped = ((Chronometer) findViewById(R.id.chronometer1)).getBase() - SystemClock.elapsedRealtime();
         ((Chronometer) findViewById(R.id.chronometer1)).stop();
         //Permet d'arreter le service qui recupere la geolocalisation
         this.stopService(new Intent(this, ServiceSync.class));
+        //Si la connexion internet est activee quand on arrete le service, on envoi les donnees et on supprime le fichier de geolocalisation sur le mobile
+        if(this.isNetworkAvailable()){
+            packageReceiver.onReceive(this,new Intent().setAction("activityFinished"));
+        }
+        else{
+            //permet d'indiquer au receiver que l'activite est finie, a la prochaine connexion, le serveur recevra les donnees
+            packageReceiver.onReceive(this,new Intent().setAction("activityFinished"));
+        }
         Toast.makeText(this, "Fin de la seance de sport", Toast.LENGTH_LONG).show();
         DataLayerListenerService.setHandler(null);
     }
@@ -259,34 +234,35 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         timeWhenStopped = 0;
     }
 
-/*    public void async_post(){
-        //do a twiiter search with a http post
-        String url = "http://172.19.150.235:8080/SmartHealth---Web-App/test";
-        int idUser = 1201;
-        int nbPas = 3000;
-        ArrayList<String> latitude= new ArrayList<String>();
-        latitude.add("15.23568");
-        latitude.add("15.23568");latitude.add("15.23568");
-        latitude.add("15.23568");
+//    public void async_post(){
+//        aq = new AQuery(this);
+//        //do a twiiter search with a http post
+//        String url = "http://172.19.150.235:8080/SmartHealth---Web-App/test";
+//        int idUser = 1201;
+//        int nbPas = 3000;
+//        ArrayList<String> latitude= new ArrayList<String>();
+//        latitude.add("15.23568");
+//        latitude.add("15.23568");latitude.add("15.23568");
+//        latitude.add("15.23568");
+//        String[] longitude= {"47.26545","47.26545","47.26545","47.26545"};
+//        //Date date = new Date();
+//        //Une appelle de methode d'Async_post pour chaque jour (la date), car il faut envoyer toutes les donnees d'un jour ensemble
+//        Map<String, Object> params = new HashMap<String, Object>();
+//        params.put("userId", idUser);
+//        params.put("dateDuJour",System.currentTimeMillis());
+//        params.put("latitude",latitude);
+//        params.put("longitude",longitude);
+//        params.put("podometre", nbPas);
+//        params.put("rythmeCardiaque", nbPas);
+//        aq.ajax(url, params, JSONObject.class, new AjaxCallback<JSONObject>() {
+//            @Override
+//            public void callback(String url, JSONObject json, AjaxStatus status) {
+//                //showResult(json);
+//                System.out.println("Dans aq.ajax = "+json);
+//            }
+//        });
+//    }
 
-        String[] longitude= {"47.26545","47.26545","47.26545","47.26545"};
-        Date date = new Date();
-        //Une appelle de methode d'Async_post pour chaque jour (la date), car il faut envoyer toutes les donnees d'un jour ensemble
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("nom", idUser);
-        params.put("dateDuJour",date);
-        params.put("latitude",latitude);
-        params.put("longitude",longitude);
-        params.put("podometre", nbPas);
-        aq.ajax(url, params, JSONObject.class, new AjaxCallback<JSONObject>() {
-            @Override
-            public void callback(String url, JSONObject json, AjaxStatus status) {
-                //showResult(json);
-                System.out.println("Dans aq.ajax = "+json);
-            }
-        });
-
-    }*/
     private void createGpsDisabledAlert() {
         AlertDialog.Builder localBuilder = new AlertDialog.Builder(this);
         localBuilder.setMessage("Activer le GPS avant de commencer votre seance").setCancelable(false).setPositiveButton("Activer GPS ",

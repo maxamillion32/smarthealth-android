@@ -52,13 +52,7 @@ public class FragmentMap extends Fragment implements LocationListener {
         map = mapView.getMap();
         map.getUiSettings().setMyLocationButtonEnabled(true);//false de base
         map.setMyLocationEnabled(true);
-
         //Permet d'activer le clique sur le bouton de gps en haut a droite de la map => si GPS non active la pop up s'affiche pour activer le gps
-        //this.locationButtonClickListerner();
-        lm = (LocationManager) this.getActivity().getSystemService(this.getActivity().LOCATION_SERVICE);
-//        if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-//            createGpsDisabledAlert();
-//        }
         lm = (LocationManager) this.getActivity().getSystemService(this.getActivity().LOCATION_SERVICE);
         lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this); //You can also use LocationManager.GPS_PROVIDER and LocationManager.PASSIVE_PROVIDER
         // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
@@ -153,25 +147,6 @@ public class FragmentMap extends Fragment implements LocationListener {
         createGpsDisabledAlert();
     }
 
-//    private void locationButtonClickListerner(){
-//        map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener(){
-//
-//            @Override
-//            public boolean onMyLocationButtonClick() {
-//                if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-//                    createGpsDisabledAlert();
-//                } else {
-//                    Location location = map.getMyLocation();
-//                    latitude = location.getLatitude();
-//                    longitude = location.getLongitude();
-//                    positionUser= new LatLng(latitude,longitude);
-//                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(positionUser,17));
-//                }
-//                return true;
-//            }
-//        });
-//
-//    }
 
     private void createGpsDisabledAlert() {
         AlertDialog.Builder localBuilder = new AlertDialog.Builder(this.getActivity());

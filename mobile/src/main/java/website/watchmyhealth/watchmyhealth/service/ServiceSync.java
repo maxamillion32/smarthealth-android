@@ -14,11 +14,15 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.widget.Toast;
 
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+
 import website.watchmyhealth.watchmyhealth.fragment.FragmentMap;
 
 public class ServiceSync extends Service implements LocationListener{
     private LocationManager locationMgr = null;
-
+    private FileOutputStream fOut = null;
+    private OutputStreamWriter osw = null;
     @Override
     public void onCreate() {
         locationMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -43,9 +47,23 @@ public class ServiceSync extends Service implements LocationListener{
     public void onLocationChanged(Location location) {
         Double latitude = location.getLatitude();
         Double longitude = location.getLongitude();
+        String strLatitude = Double.toString(latitude);
+        String strLongitude = Double.toString(longitude);
         Toast.makeText(getBaseContext(),"Voici les coordonnees de votre telephone : " + latitude + " " + longitude,Toast.LENGTH_LONG).show();
+        try{
+            fOut = this.openFileOutput("save_Time_Longitude_Latitude.dat", MODE_APPEND);
+            osw = new OutputStreamWriter(fOut);
+            String separator = System.getProperty("line.separator");
+            //osw.flush();
+            osw.append(System.currentTimeMillis()+"_" + strLongitude+"_"+strLatitude);
+            osw.append(separator);
+            osw.flush();
+            osw.close();
+            fOut.close();
+        }
+        catch (Exception e) {
+        }
     }
-
 
     @Override
     public IBinder onBind(Intent arg0) {

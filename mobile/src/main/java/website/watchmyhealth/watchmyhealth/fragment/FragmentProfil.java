@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
 import website.watchmyhealth.watchmyhealth.R;
+import website.watchmyhealth.watchmyhealth.ServerSync;
 import website.watchmyhealth.watchmyhealth.activity.ProfilModif;
 
 /**
@@ -34,11 +35,15 @@ public class FragmentProfil extends Fragment {
     private TextView tvDateNaissance;
     private TextView tvTaille;
     private TextView tvPoids;
+    private TextView tvNom;
+    private TextView tvPrenom;
     private ImageButton imageButton;
     private final String EXTRA_USER_TV_MAIL = "EXTRA_USER_TV_MAIL";
     private final String EXTRA_USER_TV_DATE_NAISSANCE = "EXTRA_USER_TV_DATE_NAISSANCE";
     private final String EXTRA_USER_TV_POIDS = "EXTRA_USER_TV_POIDS";
     private final String EXTRA_USER_TV_TAILLE = "EXTRA_USER_TV_TAILLE";
+    private final String EXTRA_USER_TV_PRENOM = "EXTRA_USER_TV_PRENOM";
+    private final String EXTRA_USER_TV_NOM = "EXTRA_USER_TV_NOM";
     @Override
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,6 +51,8 @@ public class FragmentProfil extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         tvEmail = (TextView)view.findViewById(R.id.tvEmail);
         tvDateNaissance = (TextView)view.findViewById(R.id.tvDateNaissance);
+        tvNom = (TextView)view.findViewById(R.id.tvNom);
+        tvPrenom = (TextView)view.findViewById(R.id.tvPrenom);
         tvTaille =(TextView)view.findViewById(R.id.tvTaille);
         tvPoids=(TextView)view.findViewById(R.id.tvPoids);
         imageButton = (ImageButton) view.findViewById(R.id.imageButton);
@@ -62,42 +69,15 @@ public class FragmentProfil extends Fragment {
             tvDateNaissance.setText(intentFromProfilModif.getStringExtra("EXTRA_USER_MODIF_DATE_NAISSANCE"));
             tvTaille.setText(intentFromProfilModif.getStringExtra("EXTRA_USER_MODIF_TAILLE"));
             tvPoids.setText(intentFromProfilModif.getStringExtra("EXTRA_USER_MODIF_POIDS"));
+            tvNom.setText(intentFromProfilModif.getStringExtra("EXTRA_USER_MODIF_NOM"));
+            tvPrenom.setText(intentFromProfilModif.getStringExtra("EXTRA_USER_MODIF_PRENOM"));
         }
         return view;
     }
 
     private void getInformationsFromServeur() {
-        //do a twiiter search with a http post
-        String url = "http://192.168.0.12:8080/SmartHealth---Web-App/test?useFunctionServer=getProfil";
-        int idUser = 1201;
-        Date date = new Date();
-
-        aq.ajax(url, JSONObject.class, new AjaxCallback<JSONObject>() {
-            @Override
-            public void callback(String url, JSONObject json, AjaxStatus status) {
-                if(json!=null){
-                    System.out.println("Dans aq.ajax url= " + url);
-                    System.out.println("Dans aq.ajax json= " + json);
-                    System.out.println("Dans aq.ajax status= " + status);
-                    JSONObject jsonObj = (JSONObject)json;
-                    try {
-                        String mail = (String)jsonObj.get("mail");
-                        String dateNaissance = (String)jsonObj.get("dateNaissance");
-                        String taille = (String)jsonObj.get("taille");
-                        String poids = (String)jsonObj.get("poids");
-                        System.out.println("mail="+mail);
-                        System.out.println("dateNaissance="+dateNaissance);
-                        System.out.println("taille="+taille);
-                        System.out.println("poids ="+poids);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                else{
-                    Toast.makeText(FragmentProfil.this.getActivity(),"Impossible de contacter le serveur",Toast.LENGTH_LONG);
-                }
-            }
-        });
+       ServerSync serverSync = new ServerSync(this.getActivity());
+        serverSync.async_get_profil(tvNom,tvPrenom,tvEmail,tvDateNaissance,tvTaille,tvPoids);
     }
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager= (ConnectivityManager) this.getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -107,36 +87,45 @@ public class FragmentProfil extends Fragment {
     public void /*String*/ReadSettings(){
         FileInputStream fis = null;
         BufferedReader reader = null;
-        String data = null;
-
         try{
-            fis = this.getActivity().openFileInput("settings.dat");
+            fis = this.getActivity().openFileInput("settings_profil.dat");
             //isr = new InputStreamReader(fIn);
             reader = new BufferedReader(new InputStreamReader(fis));
-            String line = null;
-            ArrayList<String> lineSetting= new ArrayList<String>();
-            tvEmail = (TextView)getView().findViewById(R.id.tvEmail);
-            tvDateNaissance = (TextView)getView().findViewById(R.id.tvDateNaissance);
-            tvTaille =(TextView)getView().findViewById(R.id.tvTaille);
-            tvPoids=(TextView)getView().findViewById(R.id.tvPoids);
-            while ((line = reader.readLine()) != null){
-                lineSetting.add(line);
+            String strLine = "";
+            String[] tmpStr;
+            while ((strLine = reader.readLine()) != null) {
+                System.out.println("ReadSettings ======= "+strLine);
+                tmpStr = strLine.split("_");
+                String libelle = tmpStr[0];
+                switch (libelle){
+                    case "taille":
+                        tvTaille.setText(tmpStr[1]);
+                        break;
+                    case "poids":
+                        tvPoids.setText(tmpStr[1]);
+                        break;
+                    case "dateNaissance":
+                        tvDateNaissance.setText(tmpStr[1]);
+                        break;
+                    case "mail":
+                        tvEmail.setText(tmpStr[1]);
+                        break;
+                    case "nom":
+                        tvNom.setText(tmpStr[1]);
+                        break;
+                    case "prenom":
+                        tvPrenom.setText(tmpStr[1]);
+                        break;
+                }
             }
             reader.close();
             fis.close();
-            System.out.println("////////////////// DATA \n");
-            for (int i = 0;i<lineSetting.size();i++){
-                System.out.println(new String(lineSetting.get(i)));
-            }
-            System.out.println("//////////////////");
-
-            //affiche le contenu de mon fichier dans un popup surgissant
         }
         catch (Exception e) {
             Toast.makeText(this.getActivity(), "Settings not read",Toast.LENGTH_SHORT).show();
         }
-        //return data;
     }
+
     // Button to be redirected to ProfilModif.java
     public void setImageButtonProfilModif() {
         imageButton.setOnClickListener(new View.OnClickListener() {
@@ -146,6 +135,8 @@ public class FragmentProfil extends Fragment {
                 redirectModify.putExtra(EXTRA_USER_TV_DATE_NAISSANCE, tvDateNaissance.getText());
                 redirectModify.putExtra(EXTRA_USER_TV_POIDS, tvPoids.getText());
                 redirectModify.putExtra(EXTRA_USER_TV_TAILLE, tvTaille.getText());
+                redirectModify.putExtra(EXTRA_USER_TV_NOM, tvNom.getText());
+                redirectModify.putExtra(EXTRA_USER_TV_PRENOM, tvPrenom.getText());
                 startActivity(redirectModify);
                 FragmentProfil.this.getActivity().onAttachFragment(FragmentProfil.this);
 
