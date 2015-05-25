@@ -27,6 +27,8 @@ import android.widget.Toast;
 
 import com.androidquery.AQuery;
 
+import org.w3c.dom.Text;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -65,6 +67,8 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         @Override
         public void onReceive(Context context, Intent intent) {
             TextView distance = (TextView) findViewById(R.id.tvDistance);
+            TextView vitesse = (TextView) findViewById(R.id.tvVitesse);
+            vitesse.setText(intent.getExtras().getString("vitesse")+" km/h");
             distance.setText(intent.getExtras().getString("distance")+" m");
         }
     };

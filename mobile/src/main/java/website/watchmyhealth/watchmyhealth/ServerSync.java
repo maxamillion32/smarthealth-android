@@ -74,7 +74,7 @@ public class ServerSync {
             }
         });
     }
-    public void async_post_activite(String idUser,ArrayList<String>latitude,ArrayList<String> longitude,String startTimer,String endTimer,String nbPas,String rythmeCardiaqueMoyen,String metres){
+    public void async_post_activite(String idUser,ArrayList<String>latitude,ArrayList<String> longitude,String startTimer,String endTimer,String nbPas,String rythmeCardiaqueMoyen,String metres,String vitesse){
         Map<String, Object> params = new HashMap<String, Object>();
         String urlPost =this.urlPost+"/test";
         params.put("useFunctionServer","sauvegardeActivitee");
@@ -86,7 +86,8 @@ public class ServerSync {
         params.put("podometre", nbPas);
         params.put("rythmeCardiaque", rythmeCardiaqueMoyen);
         params.put("metres", metres);
-
+        params.put("vitesse", vitesse);
+        System.out.println("vitesse = "+vitesse);
         aq.ajax(urlPost, params, JSONObject.class, new AjaxCallback<JSONObject>() {
             @Override
             public void callback(String urlPost, JSONObject json, AjaxStatus status) {
