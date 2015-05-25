@@ -3,6 +3,7 @@ package website.watchmyhealth.watchmyhealth;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.TextView;
@@ -63,7 +64,6 @@ public class ConnectionChangeReceiver extends BroadcastReceiver
         else{
             System.out.println("android.net.conn.CONNECTIVITY_CHANGE = "+intent.getAction());
             System.out.println("activityState = "+activityState);
-
         }
 
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService( Context.CONNECTIVITY_SERVICE );
@@ -76,6 +76,7 @@ public class ConnectionChangeReceiver extends BroadcastReceiver
                 try {
                     longitude = new ArrayList<String>();
                     latitude = new ArrayList<String>();
+                    float distance = 0;
                     fIut = context.openFileInput(FILENAME_LOCATION);
                     isr = new InputStreamReader(fIut);
                     br = new BufferedReader(isr);
@@ -83,18 +84,21 @@ public class ConnectionChangeReceiver extends BroadcastReceiver
                     String [] tmpTab;
                     if((strLine = br.readLine())!=null){
                         tmpTab = strLine.split("_");
-                        System.out.println(tmpTab[0]+" "+tmpTab[1]+" "+tmpTab[2]);
+                        System.out.println(tmpTab[0]+" "+tmpTab[1]+" "+tmpTab[2]+" "+tmpTab[3]);
                         startTimer = tmpTab[0];
                         endTimer = tmpTab[0];
                         longitude.add(tmpTab[1]);
                         latitude.add(tmpTab[2]);
+                        distance =Integer.parseInt(tmpTab[3]);
                     }
                     while ((strLine = br.readLine()) != null) { // while loop begins here
                         tmpTab = strLine.split("_");
-                        System.out.println(tmpTab[0]+" "+tmpTab[1]+" "+tmpTab[2]);
+                        System.out.println(tmpTab[0]+" "+tmpTab[1]+" "+tmpTab[2]+" "+tmpTab[3]);
                         endTimer = tmpTab[0];
                         longitude.add(tmpTab[1]);
                         latitude.add(tmpTab[2]);
+                        distance = Integer.parseInt(tmpTab[3]);
+                        System.out.println("Distance total = "+ distance);
                     }
                     isr.close();
                     br.close();
@@ -103,7 +107,7 @@ public class ConnectionChangeReceiver extends BroadcastReceiver
                     String idUser = "1251";
                     String nbPas= "3000";
                     String rythmeCardiaqueMoyen = "95";
-
+                    String metres= String.valueOf(distance);
                     ServerSync serverSync = new ServerSync(context);
                     serverSync.async_post_activite(
                             idUser,
@@ -112,7 +116,8 @@ public class ConnectionChangeReceiver extends BroadcastReceiver
                             startTimer,
                             endTimer,
                             nbPas,
-                            rythmeCardiaqueMoyen
+                            rythmeCardiaqueMoyen,
+                            metres
                     );
 
                 } catch (FileNotFoundException e) {

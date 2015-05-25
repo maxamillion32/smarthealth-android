@@ -90,8 +90,7 @@
             <TextView
                 android:layout_width="137dp"
                 android:layout_height="wrap_content"
-                android:text="15.2 Km"
-                android:id="@+id/textView10"
+                android:id="@+id/tvDistance"
                 android:textSize="25dp"
                 android:layout_column="1" />
 

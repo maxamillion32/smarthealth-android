@@ -21,10 +21,14 @@ import java.io.OutputStreamWriter;
 import website.watchmyhealth.watchmyhealth.Save_Data_ReadWrite;
 
 public class ServiceSync extends Service implements LocationListener{
+    public String broadcastValue = "0";
+
     private LocationManager locationMgr = null;
     private final String FILENAME_LOCATION ="save_Time_Longitude_Latitude.dat";
     private FileOutputStream fOut = null;
     private OutputStreamWriter osw = null;
+    private float distance = 0;
+    private Location locationTmp = null;
     @Override
     public void onCreate() {
         locationMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -47,8 +51,16 @@ public class ServiceSync extends Service implements LocationListener{
 
     @Override
     public void onLocationChanged(Location location) {
+        if(locationTmp != null){
+            distance += locationTmp.distanceTo(location);
+        }
+        if(location!=null){
+            locationTmp = new Location(location);
+        }
+
         Double latitude = location.getLatitude();
         Double longitude = location.getLongitude();
+        location.distanceTo(location);
         String strLatitude = Double.toString(latitude);
         String strLongitude = Double.toString(longitude);
         Toast.makeText(getBaseContext(),"Voici les coordonnees de votre telephone : " + latitude + " " + longitude,Toast.LENGTH_LONG).show();
@@ -58,7 +70,7 @@ public class ServiceSync extends Service implements LocationListener{
             osw = new OutputStreamWriter(fOut);
             String separator = System.getProperty("line.separator");
             //osw.flush();
-            osw.append(System.currentTimeMillis()+"_" + strLongitude+"_"+strLatitude);
+            osw.append(System.currentTimeMillis()+"_" + strLongitude+"_"+strLatitude+"_"+distance);
             osw.append(separator);
 //            osw.flush();
             osw.close();
@@ -66,6 +78,11 @@ public class ServiceSync extends Service implements LocationListener{
         }
         catch (Exception e) {
         }
+        //transmet les donnees a Home.java pour mettre a jour la distance sur l'UI
+        Intent i = new Intent("DISTANCE_UPDATED");
+        broadcastValue = String.valueOf((int)distance);
+        i.putExtra("distance", broadcastValue);
+        sendBroadcast(i);
     }
 
     @Override

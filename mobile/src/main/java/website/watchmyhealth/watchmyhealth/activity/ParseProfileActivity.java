@@ -30,6 +30,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.androidquery.AQuery;
 import com.parse.ParseUser;
 import com.parse.ui.ParseLoginBuilder;
 import website.watchmyhealth.watchmyhealth.R;
@@ -48,6 +49,8 @@ public class ParseProfileActivity extends Activity {
     private Button loginOrLogoutButton;
 
     private ParseUser currentUser;
+    private String identifiant = "fjauvat@gmail.com";
+    private String mdp = "123456";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,14 +80,18 @@ public class ParseProfileActivity extends Activity {
             }
         });
     }
-
     @Override
     protected void onStart() {
         super.onStart();
 
         currentUser = ParseUser.getCurrentUser();
+        AQuery aq = new AQuery(this);
         if (currentUser != null) {
-            showProfileLoggedIn();
+            //Verif si mdp et id existe sur mango db
+            // if VERIFIE
+                showProfileLoggedIn();
+            // Sinon
+            // Message d'erreur
         } else {
             showProfileLoggedOut();
         }

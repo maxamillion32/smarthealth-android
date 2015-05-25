@@ -1,6 +1,7 @@
 package website.watchmyhealth.watchmyhealth.activity;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,6 +37,7 @@ import java.io.InputStreamReader;
 import website.watchmyhealth.watchmyhealth.ConnectionChangeReceiver;
 import website.watchmyhealth.watchmyhealth.NavigationDrawerFragment;
 import website.watchmyhealth.watchmyhealth.R;
+import website.watchmyhealth.watchmyhealth.fragment.FragmentAPropos;
 import website.watchmyhealth.watchmyhealth.fragment.FragmentMap;
 import website.watchmyhealth.watchmyhealth.fragment.FragmentProfil;
 import website.watchmyhealth.watchmyhealth.fragment.FragmentHome;
@@ -58,7 +60,14 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
     Fragment fragment;
     private ConnectionChangeReceiver packageReceiver;
     FragmentManager fragmentManager;
+    private BroadcastReceiver uiUpdated= new BroadcastReceiver() {
 
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            TextView distance = (TextView) findViewById(R.id.tvDistance);
+            distance.setText(intent.getExtras().getString("distance")+" m");
+        }
+    };
 
 
     private Handler handler = new Handler() {
@@ -77,6 +86,7 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Intent intent = getIntent();
+
         if( intent.getExtras() !=null){
                 //Si on est sur l'activity ProfilModif et qu'on sauvegarde les modifications on doit retourner sur le FragmentProfil et non dans la page Home , on transmet donc cette info via cet Intent
                 onNavigationDrawerItemSelected(intent.getIntExtra("GO_TO_FRAGMENT_PROFIL", 2));
@@ -86,6 +96,8 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
             packageReceiver= new ConnectionChangeReceiver();
             registerReceiver(packageReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
         }
+        registerReceiver(uiUpdated, new IntentFilter("DISTANCE_UPDATED"));
+
         mNavigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
@@ -137,6 +149,10 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
             case 2: //attention, si on change de "case" pour FragmentProfil, le mappage ne se fera plus entre ProfilModif et FragmentProfil ctrl+f = GO_TO_FRAGMENT_PROFIL
                 fragment = new FragmentProfil();
                 mTitle = getString(R.string.navigation_profil);
+                break;
+            case 3: //attention, si on change de "case" pour FragmentProfil, le mappage ne se fera plus entre ProfilModif et FragmentProfil ctrl+f = GO_TO_FRAGMENT_PROFIL
+                fragment = new FragmentAPropos();
+                mTitle = getString(R.string.navigation_a_propos);
                 break;
 
         }
@@ -207,7 +223,7 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         this.stopService(new Intent(this, ServiceSync.class));
         //Si la connexion internet est activee quand on arrete le service, on envoi les donnees et on supprime le fichier de geolocalisation sur le mobile
         if(this.isNetworkAvailable()){
-            packageReceiver.onReceive(this,new Intent().setAction("activityFinished"));
+            packageReceiver.onReceive(this, new Intent().setAction("activityFinished"));
 
         }
         else{
