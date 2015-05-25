@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fd454545"
+    android:backgroundTint="#ff373737">
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView2" >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="A Propos"
+                android:id="@+id/textView9"
+                android:gravity="center"
+                android:textSize="45dp"
+                android:textColor="#ffffff" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView12"
+                android:text="L&apos;application Watch My Health a été réalisé dans le cadre d&apos;un projet universitaire réalisé au sein du Master 1 MIAGE à l&apos;Université Nice Sophia Antipolis.  \n Ce projet a été réalisé par Fabrice Jauvat, Elmahdi Korfed, Thibaut Linares et Yoann Moise. \n Vous pouvez retrouver l&apos;intégralité du projet (Application Android Mobile, Android Wear, Serveur et Application Web) sur GitHub en cherchant &quot;Smarthealth---Android App&quot; et &quot;Smarthealth---Web App&quot;"
+                android:textSize="18dp"
+                android:layout_margin="25dp"
+                android:textColor="#ffffff"
+                android:textAlignment="center" />
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView"
+                android:src="@drawable/logos_unice_miage" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

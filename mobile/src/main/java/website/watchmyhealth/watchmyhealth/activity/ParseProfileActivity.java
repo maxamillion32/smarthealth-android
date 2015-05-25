@@ -1,8 +1,5 @@
 package website.watchmyhealth.watchmyhealth.activity;
 
-/**
- * Created by Yoann on 19/05/2015.
- */
 /*
  *  Copyright (c) 2014, Parse, LLC. All rights reserved.
  *
@@ -22,7 +19,8 @@ package website.watchmyhealth.watchmyhealth.activity;
  *  IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
-*/
+ */
+
 
 import android.app.Activity;
 import android.content.Intent;
@@ -32,17 +30,16 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.parse.Parse;
 import com.parse.ParseUser;
 import com.parse.ui.ParseLoginBuilder;
-
 import website.watchmyhealth.watchmyhealth.R;
+
 
 /**
  * Shows the user profile. This simple activity can function regardless of whether the user
  * is currently logged in.
  */
-public class LoginProfileActivity extends Activity {
+public class ParseProfileActivity extends Activity {
     private static final int LOGIN_REQUEST = 0;
 
     private TextView titleTextView;
@@ -63,7 +60,7 @@ public class LoginProfileActivity extends Activity {
         loginOrLogoutButton = (Button) findViewById(R.id.login_or_logout_button);
         titleTextView.setText(R.string.profile_title_logged_in);
 
-        loginOrLogoutButton.setOnClickListener(new View.OnClickListener() {
+        loginOrLogoutButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (currentUser != null) {
@@ -74,7 +71,7 @@ public class LoginProfileActivity extends Activity {
                 } else {
                     // User clicked to log in.
                     ParseLoginBuilder loginBuilder = new ParseLoginBuilder(
-                            LoginProfileActivity.this);
+                            ParseProfileActivity.this);
                     startActivityForResult(loginBuilder.build(), LOGIN_REQUEST);
                 }
             }
@@ -97,13 +94,15 @@ public class LoginProfileActivity extends Activity {
      * Shows the profile of the given user.
      */
     private void showProfileLoggedIn() {
-        titleTextView.setText(R.string.profile_title_logged_in);
+        /*titleTextView.setText(R.string.profile_title_logged_in);
         emailTextView.setText(currentUser.getEmail());
         String fullName = currentUser.getString("name");
         if (fullName != null) {
             nameTextView.setText(fullName);
         }
-        loginOrLogoutButton.setText(R.string.profile_logout_button_label);
+        loginOrLogoutButton.setText(R.string.profile_logout_button_label);*/
+        Intent intent = new Intent(this, Home.class);
+        startActivity(intent);
     }
 
     /**
