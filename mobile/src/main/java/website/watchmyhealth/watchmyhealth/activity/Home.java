@@ -58,8 +58,9 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
     Fragment fragment;
     private ConnectionChangeReceiver packageReceiver;
     FragmentManager fragmentManager;
-    private FileInputStream fIut = null;
-    private InputStreamReader isr = null;
+
+
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -81,12 +82,14 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
                 onNavigationDrawerItemSelected(intent.getIntExtra("GO_TO_FRAGMENT_PROFIL", 2));
                 intent.getExtras().remove("GO_TO_FRAGMENT_PROFIL");
         }
+        else{
+            packageReceiver= new ConnectionChangeReceiver();
+            registerReceiver(packageReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
+        }
         mNavigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
         //si il y a une connexion internet alors on envoi les donnees sauvegarde dans les fichiers
-            packageReceiver= new ConnectionChangeReceiver();
-            registerReceiver(packageReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
 
     }
 // l'utilisateur devra faire un double clique pour sortir de l'application
@@ -178,16 +181,18 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
 
     long timeWhenStopped = 0;
     public void startChronometer(View view) {
-        ((Chronometer) findViewById(R.id.chronometer1)).setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
         LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
         //Permet de demarrer le service qui va recuperer la geolocalisation
+        packageReceiver.onReceive(this,new Intent().setAction("activityStarted"));
+
         if(!manager.isProviderEnabled( LocationManager.GPS_PROVIDER )){
             createGpsDisabledAlert();
         }
         else{
             this.startService(new Intent(Home.this, ServiceSync.class));
         }
-        packageReceiver.onReceive(this,new Intent().setAction("activityStarted"));
+        ((Chronometer) findViewById(R.id.chronometer1)).setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
+
         Toast.makeText(this,"Debut de la seance de sport",Toast.LENGTH_LONG).show();
         mTextViewHeart = (TextView) findViewById(R.id.heartbeat);
         mTextViewStep = (TextView) findViewById(R.id.stepcount);
@@ -195,23 +200,6 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
     }
 
     public void stopChronometer(View view) {
-        try {
-            fIut = this.openFileInput("save_Time_Longitude_Latitude.dat");
-            isr = new InputStreamReader(fIut);
-            BufferedReader br = new BufferedReader(isr);
-            String strLine="";
-            while ((strLine = br.readLine()) != null) { // while loop begins here
-                System.out.println(strLine);
-            }
-            isr.close();
-            br.close();
-            fIut.close();
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         timeWhenStopped = ((Chronometer) findViewById(R.id.chronometer1)).getBase() - SystemClock.elapsedRealtime();
         ((Chronometer) findViewById(R.id.chronometer1)).stop();
@@ -220,6 +208,7 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         //Si la connexion internet est activee quand on arrete le service, on envoi les donnees et on supprime le fichier de geolocalisation sur le mobile
         if(this.isNetworkAvailable()){
             packageReceiver.onReceive(this,new Intent().setAction("activityFinished"));
+
         }
         else{
             //permet d'indiquer au receiver que l'activite est finie, a la prochaine connexion, le serveur recevra les donnees
@@ -233,35 +222,6 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         ((Chronometer) findViewById(R.id.chronometer1)).setBase(SystemClock.elapsedRealtime());
         timeWhenStopped = 0;
     }
-
-//    public void async_post(){
-//        aq = new AQuery(this);
-//        //do a twiiter search with a http post
-//        String url = "http://172.19.150.235:8080/SmartHealth---Web-App/test";
-//        int idUser = 1201;
-//        int nbPas = 3000;
-//        ArrayList<String> latitude= new ArrayList<String>();
-//        latitude.add("15.23568");
-//        latitude.add("15.23568");latitude.add("15.23568");
-//        latitude.add("15.23568");
-//        String[] longitude= {"47.26545","47.26545","47.26545","47.26545"};
-//        //Date date = new Date();
-//        //Une appelle de methode d'Async_post pour chaque jour (la date), car il faut envoyer toutes les donnees d'un jour ensemble
-//        Map<String, Object> params = new HashMap<String, Object>();
-//        params.put("userId", idUser);
-//        params.put("dateDuJour",System.currentTimeMillis());
-//        params.put("latitude",latitude);
-//        params.put("longitude",longitude);
-//        params.put("podometre", nbPas);
-//        params.put("rythmeCardiaque", nbPas);
-//        aq.ajax(url, params, JSONObject.class, new AjaxCallback<JSONObject>() {
-//            @Override
-//            public void callback(String url, JSONObject json, AjaxStatus status) {
-//                //showResult(json);
-//                System.out.println("Dans aq.ajax = "+json);
-//            }
-//        });
-//    }
 
     private void createGpsDisabledAlert() {
         AlertDialog.Builder localBuilder = new AlertDialog.Builder(this);
@@ -283,6 +243,5 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-
 }
 

@@ -6,6 +6,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -44,7 +45,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import website.watchmyhealth.watchmyhealth.ConnectionChangeReceiver;
 import website.watchmyhealth.watchmyhealth.R;
+import website.watchmyhealth.watchmyhealth.Save_Data_ReadWrite;
 import website.watchmyhealth.watchmyhealth.ServerSync;
 
 
@@ -219,14 +222,17 @@ public class ProfilModif extends ActionBarActivity {
         intent.putExtra(EXTRA_USER_MODIF_POIDS, this.modifPoids.getText().toString());
         intent.putExtra(EXTRA_USER_MODIF_DATE_NAISSANCE, this.modifDateNaissance.getText().toString());
         intent.putExtra(EXTRA_USER_MODIF_EMAIL, this.modifMail.getText().toString());
+
         //permet d'indiquer quand lorsqu'on sauvegarde on veut se rendre sur la position 2 du switch dans Home.java
         intent.putExtra(GO_TO_FRAGMENT_PROFIL, 2);
+        Save_Data_ReadWrite save_data_readWrite= new Save_Data_ReadWrite(this);
+
         if(isNetworkAvailable()){
             async_post();
             //si la connexion n'est pas disponible la prochaine fois que l'utilisateur retourne sur le profil alors les donnees seront recuperees dans le fichier
-            saveDataProfilModifInFile();
+            save_data_readWrite.saveDataProfilModifInFile(this.modifNom.getText().toString(),this.modifPrenom.getText().toString(),this.modifTaille.getText().toString(),this.modifPoids.getText().toString(),this.modifDateNaissance.getText().toString(),this.modifMail.getText().toString());
         }else{
-            saveDataProfilModifInFile();
+            save_data_readWrite.saveDataProfilModifInFile(this.modifNom.getText().toString(),this.modifPrenom.getText().toString(),this.modifTaille.getText().toString(),this.modifPoids.getText().toString(),this.modifDateNaissance.getText().toString(),this.modifMail.getText().toString());
         }
         startActivity(intent);
     }
@@ -240,7 +246,9 @@ public class ProfilModif extends ActionBarActivity {
                 this.modifMail.getText().toString(),
                 this.modifDateNaissance.getText().toString(),
                 this.modifPoids.getText().toString(),
-                this.modifTaille.getText().toString()
+                this.modifTaille.getText().toString(),
+                this.modifNom.getText().toString(),
+                this.modifPrenom.getText().toString()
         );
     }
     private boolean isNetworkAvailable() {
@@ -252,30 +260,30 @@ public class ProfilModif extends ActionBarActivity {
     /**
      * Permet de sauvegarder les donnees du profil dans un fichier texte pour les recuperer sans connexion(Dans Home.java)
      */
-    public void saveDataProfilModifInFile(){
-        FileOutputStream fOut = null;
-        OutputStreamWriter osw = null;
-        this.deleteFile("settings_profil.dat");
-        try{
-            fOut = this.openFileOutput("settings_profil.dat", MODE_APPEND);
-            osw = new OutputStreamWriter(fOut);
-            String separator = System.getProperty("line.separator");
-            osw.append("nom_" + this.modifNom.getText().toString());
-            osw.append(separator);
-            osw.append("prenom_" + this.modifPrenom.getText().toString());
-            osw.append(separator);
-            osw.append("taille_" + this.modifTaille.getText().toString());
-            osw.append(separator);
-            osw.append("poids_" + this.modifPoids.getText().toString());
-            osw.append(separator);
-            osw.append("dateNaissance_" + this.modifDateNaissance.getText().toString());
-            osw.append(separator);
-            osw.append("mail_" + this.modifMail.getText().toString());
-            osw.close();
-            fOut.close();
-        }
-        catch (Exception e) {
-        }
-    }
+//    public void saveDataProfilModifInFile(){
+//        FileOutputStream fOut = null;
+//        OutputStreamWriter osw = null;
+//        this.deleteFile(FILENAME_PROFIL);
+//        try{
+//            fOut = this.openFileOutput(FILENAME_PROFIL, MODE_APPEND);
+//            osw = new OutputStreamWriter(fOut);
+//            String separator = System.getProperty("line.separator");
+//            osw.append("nom_" + this.modifNom.getText().toString());
+//            osw.append(separator);
+//            osw.append("prenom_" + this.modifPrenom.getText().toString());
+//            osw.append(separator);
+//            osw.append("taille_" + this.modifTaille.getText().toString());
+//            osw.append(separator);
+//            osw.append("poids_" + this.modifPoids.getText().toString());
+//            osw.append(separator);
+//            osw.append("dateNaissance_" + this.modifDateNaissance.getText().toString());
+//            osw.append(separator);
+//            osw.append("mail_" + this.modifMail.getText().toString());
+//            osw.close();
+//            fOut.close();
+//        }
+//        catch (Exception e) {
+//        }
+//    }
 
 }

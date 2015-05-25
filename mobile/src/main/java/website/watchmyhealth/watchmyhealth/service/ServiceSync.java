@@ -4,6 +4,7 @@ package website.watchmyhealth.watchmyhealth.service;
  * Created by Fabrice on 17/05/2015.
  */
 
+import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -17,10 +18,11 @@ import android.widget.Toast;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 
-import website.watchmyhealth.watchmyhealth.fragment.FragmentMap;
+import website.watchmyhealth.watchmyhealth.Save_Data_ReadWrite;
 
 public class ServiceSync extends Service implements LocationListener{
     private LocationManager locationMgr = null;
+    private final String FILENAME_LOCATION ="save_Time_Longitude_Latitude.dat";
     private FileOutputStream fOut = null;
     private OutputStreamWriter osw = null;
     @Override
@@ -50,14 +52,15 @@ public class ServiceSync extends Service implements LocationListener{
         String strLatitude = Double.toString(latitude);
         String strLongitude = Double.toString(longitude);
         Toast.makeText(getBaseContext(),"Voici les coordonnees de votre telephone : " + latitude + " " + longitude,Toast.LENGTH_LONG).show();
+
         try{
-            fOut = this.openFileOutput("save_Time_Longitude_Latitude.dat", MODE_APPEND);
+            fOut = this.openFileOutput(FILENAME_LOCATION, MODE_APPEND);
             osw = new OutputStreamWriter(fOut);
             String separator = System.getProperty("line.separator");
             //osw.flush();
             osw.append(System.currentTimeMillis()+"_" + strLongitude+"_"+strLatitude);
             osw.append(separator);
-            osw.flush();
+//            osw.flush();
             osw.close();
             fOut.close();
         }

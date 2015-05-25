@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
 import website.watchmyhealth.watchmyhealth.R;
+import website.watchmyhealth.watchmyhealth.Save_Data_ReadWrite;
 import website.watchmyhealth.watchmyhealth.ServerSync;
 import website.watchmyhealth.watchmyhealth.activity.ProfilModif;
 
@@ -30,7 +31,6 @@ import website.watchmyhealth.watchmyhealth.activity.ProfilModif;
  */
 
 public class FragmentProfil extends Fragment {
-    private AQuery aq;
     private TextView tvEmail;
     private TextView tvDateNaissance;
     private TextView tvTaille;
@@ -56,12 +56,12 @@ public class FragmentProfil extends Fragment {
         tvTaille =(TextView)view.findViewById(R.id.tvTaille);
         tvPoids=(TextView)view.findViewById(R.id.tvPoids);
         imageButton = (ImageButton) view.findViewById(R.id.imageButton);
-        aq = new AQuery(this.getActivity());
         setImageButtonProfilModif();
         if(isNetworkAvailable()){
             getInformationsFromServeur();
         }else{
-            ReadSettings();
+            Save_Data_ReadWrite save_data_readWrite= new Save_Data_ReadWrite(this.getActivity());
+            save_data_readWrite.ReadSettingsProfil(this.tvTaille,this.tvPoids,this.tvDateNaissance,this.tvEmail,this.tvNom,this.tvPrenom);
         }
         Intent intentFromProfilModif = getActivity().getIntent();
         if( intentFromProfilModif.getExtras() !=null) {
@@ -84,47 +84,47 @@ public class FragmentProfil extends Fragment {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-    public void /*String*/ReadSettings(){
-        FileInputStream fis = null;
-        BufferedReader reader = null;
-        try{
-            fis = this.getActivity().openFileInput("settings_profil.dat");
-            //isr = new InputStreamReader(fIn);
-            reader = new BufferedReader(new InputStreamReader(fis));
-            String strLine = "";
-            String[] tmpStr;
-            while ((strLine = reader.readLine()) != null) {
-                System.out.println("ReadSettings ======= "+strLine);
-                tmpStr = strLine.split("_");
-                String libelle = tmpStr[0];
-                switch (libelle){
-                    case "taille":
-                        tvTaille.setText(tmpStr[1]);
-                        break;
-                    case "poids":
-                        tvPoids.setText(tmpStr[1]);
-                        break;
-                    case "dateNaissance":
-                        tvDateNaissance.setText(tmpStr[1]);
-                        break;
-                    case "mail":
-                        tvEmail.setText(tmpStr[1]);
-                        break;
-                    case "nom":
-                        tvNom.setText(tmpStr[1]);
-                        break;
-                    case "prenom":
-                        tvPrenom.setText(tmpStr[1]);
-                        break;
-                }
-            }
-            reader.close();
-            fis.close();
-        }
-        catch (Exception e) {
-            Toast.makeText(this.getActivity(), "Settings not read",Toast.LENGTH_SHORT).show();
-        }
-    }
+//    public void /*String*/ReadSettings(){
+//        FileInputStream fis = null;
+//        BufferedReader reader = null;
+//        try{
+//            fis = this.getActivity().openFileInput(FILENAME_PROFIL);
+//            //isr = new InputStreamReader(fIn);
+//            reader = new BufferedReader(new InputStreamReader(fis));
+//            String strLine = "";
+//            String[] tmpStr;
+//            while ((strLine = reader.readLine()) != null) {
+//                System.out.println("ReadSettings ======= "+strLine);
+//                tmpStr = strLine.split("_");
+//                String libelle = tmpStr[0];
+//                switch (libelle){
+//                    case "taille":
+//                        tvTaille.setText(tmpStr[1]);
+//                        break;
+//                    case "poids":
+//                        tvPoids.setText(tmpStr[1]);
+//                        break;
+//                    case "dateNaissance":
+//                        tvDateNaissance.setText(tmpStr[1]);
+//                        break;
+//                    case "mail":
+//                        tvEmail.setText(tmpStr[1]);
+//                        break;
+//                    case "nom":
+//                        tvNom.setText(tmpStr[1]);
+//                        break;
+//                    case "prenom":
+//                        tvPrenom.setText(tmpStr[1]);
+//                        break;
+//                }
+//            }
+//            reader.close();
+//            fis.close();
+//        }
+//        catch (Exception e) {
+//            Toast.makeText(this.getActivity(), "Settings not read",Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
     // Button to be redirected to ProfilModif.java
     public void setImageButtonProfilModif() {

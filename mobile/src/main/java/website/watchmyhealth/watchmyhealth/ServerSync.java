@@ -1,5 +1,6 @@
 package website.watchmyhealth.watchmyhealth;
 
+import android.app.Activity;
 import android.content.Context;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,7 +15,6 @@ import org.json.JSONObject;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,24 +61,9 @@ public class ServerSync {
                         tvPoids.setText(poids);
                         tvTaille.setText(taille);
                         //On enregistre les donnees du serveur sur le telephone pour le cas ou l'utilisateur n'est plus connectee
-                        FileOutputStream fOut = null;
-                        OutputStreamWriter osw = null;
-                        context.deleteFile("settings_profil.dat");
-                        try{
-                            fOut = context.openFileOutput("settings_profil.dat", Context.MODE_APPEND);
-                            osw = new OutputStreamWriter(fOut);
-                            String separator = System.getProperty("line.separator");
-                            osw.append("nom_" + nom);       osw.append(separator);
-                            osw.append("prenom_" + prenom); osw.append(separator);
-                            osw.append("taille_" + taille); osw.append(separator);
-                            osw.append("poids_" + poids);   osw.append(separator);
-                            osw.append("dateNaissance_" + dateNaissance);   osw.append(separator);
-                            osw.append("mail_" + mail);
-                            osw.close();
-                            fOut.close();
-                        }
-                        catch (Exception e) {
-                        }
+                        Save_Data_ReadWrite save_data_readWrite= new Save_Data_ReadWrite((Activity)context);
+                        save_data_readWrite.saveDataProfilModifInFile(nom,prenom,taille,poids,dateNaissance,mail);
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -91,6 +76,7 @@ public class ServerSync {
     }
     public void async_post_activite(String idUser,ArrayList<String>latitude,ArrayList<String> longitude,String startTimer,String endTimer,String nbPas,String rythmeCardiaqueMoyen){
         Map<String, Object> params = new HashMap<String, Object>();
+        String urlPost =this.urlPost+"/test";
         params.put("useFunctionServer","sauvegardeActivitee");
         params.put("userId", idUser);
         params.put("timeDebutActivite",startTimer);
@@ -99,7 +85,7 @@ public class ServerSync {
         params.put("longitude",longitude);
         params.put("podometre", nbPas);
         params.put("rythmeCardiaque", rythmeCardiaqueMoyen);
-        String urlPost =this.urlPost+"/test";
+
         aq.ajax(urlPost, params, JSONObject.class, new AjaxCallback<JSONObject>() {
             @Override
             public void callback(String urlPost, JSONObject json, AjaxStatus status) {
@@ -107,8 +93,10 @@ public class ServerSync {
                 System.out.println("Dans aq.ajax = "+json);
             }
         });
+
+
     }
-    public void async_post_modif_profil(String idUser,String modifMail,String modifDateNaissance,String modifPoids,String modifTaille){
+    public void async_post_modif_profil(String idUser,String modifMail,String modifDateNaissance,String modifPoids,String modifTaille,String modifNom,String modifPrenom){
         //do a twiiter search with a http post
         //Une appelle de methode d'Async_post pour chaque jour (la date), car il faut envoyer toutes les donnees d'un jour donne en meme temps
         Map<String, Object> params = new HashMap<String, Object>();
@@ -118,7 +106,10 @@ public class ServerSync {
         params.put("userDateNaissance", modifDateNaissance);
         params.put("userPoids", modifPoids);
         params.put("userTaille", modifTaille);
-        String urlPost =this.urlPost+"/test";
+        params.put("userNom", modifNom);
+        params.put("userPrenom",modifPrenom);
+
+        String urlPost = this.urlPost + "/test";
         aq.ajax(urlPost, params, JSONObject.class, new AjaxCallback<JSONObject>() {
             @Override
             public void callback(String urlPost, JSONObject json, AjaxStatus status) {
