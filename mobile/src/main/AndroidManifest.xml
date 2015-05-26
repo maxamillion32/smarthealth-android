@@ -102,4 +102,11 @@
         <!--android:name="com.google.android.maps.v2.API_KEY"-->
         <!--android:value="AIzaSyDcgC7y1UR5cDnEXrsfk4eVH1dLpwv-11U" />-->
     </application>
+<<<<<<< HEAD
+
 </manifest>
+
+
+=======
+</manifest>
+>>>>>>> 7b26f1494db975fd1f1b724af0342964d2340ed3
