@@ -18,18 +18,23 @@ import android.widget.Toast;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 
-import website.watchmyhealth.watchmyhealth.Save_Data_ReadWrite;
 
 public class ServiceSync extends Service implements LocationListener{
+    public String broadcastValueDistance = "0";
+    public String broadcastValueVitesse = "0";
     private LocationManager locationMgr = null;
     private final String FILENAME_LOCATION ="save_Time_Longitude_Latitude.dat";
     private FileOutputStream fOut = null;
     private OutputStreamWriter osw = null;
+    private float distance = 0;
+    private long startActivityTimeStamp = 0;
+
+    private Location locationTmp = null;
     @Override
     public void onCreate() {
         locationMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000,0, this);
-        locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, this);
+        locationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000,0, this);
+        locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, this);
         super.onCreate();
     }
 
@@ -47,18 +52,47 @@ public class ServiceSync extends Service implements LocationListener{
 
     @Override
     public void onLocationChanged(Location location) {
+        double distanceTmp = 0;
+        if(locationTmp != null){
+            distance += locationTmp.distanceTo(location);
+            distanceTmp =  locationTmp.distanceTo(location);
+        }
+        if(location!=null){
+            locationTmp = new Location(location);
+        }
+
         Double latitude = location.getLatitude();
         Double longitude = location.getLongitude();
+        location.distanceTo(location);
         String strLatitude = Double.toString(latitude);
         String strLongitude = Double.toString(longitude);
-        Toast.makeText(getBaseContext(),"Voici les coordonnees de votre telephone : " + latitude + " " + longitude,Toast.LENGTH_LONG).show();
+        int vitesse = 0;
+        Toast.makeText(getBaseContext(),"Latitude =" + latitude + " Longitude=" + longitude,Toast.LENGTH_LONG).show();
 
         try{
             fOut = this.openFileOutput(FILENAME_LOCATION, MODE_APPEND);
             osw = new OutputStreamWriter(fOut);
             String separator = System.getProperty("line.separator");
             //osw.flush();
-            osw.append(System.currentTimeMillis()+"_" + strLongitude+"_"+strLatitude);
+            //osw.append(System.currentTimeMillis()+"_" + strLongitude+"_"+strLatitude+"_"+distance+"_"+vitesse); a supprimer si la  meme ligne du bas fonctionne
+
+            if(startActivityTimeStamp == 0){
+                System.out.println("Dans currentTime = 0 ");
+                startActivityTimeStamp = System.currentTimeMillis();
+            }
+            else{
+                double time = (System.currentTimeMillis()- startActivityTimeStamp)/3600;
+                System.out.println((System.currentTimeMillis()- startActivityTimeStamp)+" =====Timestamp - Timestamp ========"+time);
+                System.out.println("distanceKm ==="+distance);
+                vitesse = (int)(distance/time);
+                System.out.println("vitesse ==="+vitesse);
+
+                broadcastValueVitesse = Integer.toString(vitesse);
+                System.out.println("broadcastValueVitesse ===== "+broadcastValueVitesse);
+            }
+            osw.append(System.currentTimeMillis()+"_" + strLongitude+"_"+strLatitude+"_"+distance+"_"+vitesse);
+
+
             osw.append(separator);
 //            osw.flush();
             osw.close();
@@ -66,6 +100,13 @@ public class ServiceSync extends Service implements LocationListener{
         }
         catch (Exception e) {
         }
+        //transmet les donnees a Home.java pour mettre a jour la distance sur l'UI
+        Intent i = new Intent("DISTANCE_UPDATED");
+        broadcastValueDistance = String.valueOf((int)distance);
+        i.putExtra("distance", broadcastValueDistance);
+        i.putExtra("vitesse", broadcastValueVitesse);
+
+        sendBroadcast(i);
     }
 
     @Override

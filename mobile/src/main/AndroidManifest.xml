@@ -3,11 +3,9 @@
     package="website.watchmyhealth.watchmyhealth"
     android:versionCode="1"
     android:versionName="1.0" >
-
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
-
     <uses-library android:name="com.google.android.maps" />
     <!--
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -17,7 +15,6 @@
     <permission
         android:name="website.watchmyhealth.watchmyhealth.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
@@ -26,11 +23,9 @@
     <!--android:label="NetworkConnection" est utilisé dans l'element receiver-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-
     <uses-permission android:name="android.permission.ACCESS_GPS" />
     <uses-permission android:name="android.permission.ACCESS_ASSISTED_GPS" />
     <uses-permission android:name="android.permission.LOCATION" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -44,7 +39,6 @@
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -75,7 +69,6 @@
                 "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:label="@string/app_name" />
-
         <meta-data
             android:name="com.parse.APPLICATION_ID"
             android:value="@string/parse_app_id" />
@@ -102,18 +95,18 @@
             android:name=".activity.LoginActivity"
             android:label="@string/title_activity_login" >
         </activity>-->
-
-
         <!--FABRICE-->
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCTe0y36kwOb7XpBqDHOYPDP5zbQ-l1W5w" />
-
-
         <!-- JOHANN -->
         <!--<meta-data-->
         <!--android:name="com.google.android.maps.v2.API_KEY"-->
         <!--android:value="AIzaSyDcgC7y1UR5cDnEXrsfk4eVH1dLpwv-11U" />-->
     </application>
+<<<<<<< HEAD
 
 </manifest>
 
 
+=======
+</manifest>
+>>>>>>> 7b26f1494db975fd1f1b724af0342964d2340ed3
