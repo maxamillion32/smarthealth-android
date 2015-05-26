@@ -35,14 +35,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="55dp"
-                android:id="@+id/tvPrenom"
-                android:layout_gravity="bottom|center_horizontal"
-                android:textSize="30sp"
-                android:gravity="center_horizontal" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="55dp"
                 android:id="@+id/tvNom"
                 android:layout_gravity="center"
                 android:textSize="30sp" />

@@ -59,7 +59,6 @@ public class ProfilModif extends ActionBarActivity {
     private EditText modifTaille;
     private EditText modifMail;
     private EditText modifNom;
-    private EditText modifPrenom;
     private DatePickerDialog fromDatePickerDialog;
     private Dialog dialogPoids;
     private Dialog dialogTaille;
@@ -71,7 +70,6 @@ public class ProfilModif extends ActionBarActivity {
     private final String EXTRA_USER_MODIF_TAILLE = "EXTRA_USER_MODIF_TAILLE";
     private final String EXTRA_USER_MODIF_DATE_NAISSANCE = "EXTRA_USER_MODIF_DATE_NAISSANCE";
     private final String EXTRA_USER_MODIF_NOM = "EXTRA_USER_MODIF_NOM";
-    private final String EXTRA_USER_MODIF_PRENOM = "EXTRA_USER_MODIF_PRENOM";
     private final String GO_TO_FRAGMENT_PROFIL = "GO_TO_FRAGMENT_PROFIL";
 
 
@@ -93,9 +91,8 @@ public class ProfilModif extends ActionBarActivity {
         //recuperation du poids de l'utilisateur
         modifPoids = (EditText) findViewById(R.id.modifPoids);
         modifPoids.setInputType(InputType.TYPE_NULL);
-        //recuperation du nom et prenom
+        //recuperation du nom
         modifNom = (EditText) findViewById(R.id.modifNom);
-        modifPrenom = (EditText) findViewById(R.id.modifPrenom);
 
         //instanciation de la class AQuery permettant de faire des requete ajax sur un serveur
         Intent intentFromProfil = getIntent();
@@ -106,7 +103,6 @@ public class ProfilModif extends ActionBarActivity {
             this.modifPoids.setText(intentFromProfil.getStringExtra("EXTRA_USER_TV_POIDS"));
             this.modifTaille.setText(intentFromProfil.getStringExtra("EXTRA_USER_TV_TAILLE"));
             this.modifNom.setText(intentFromProfil.getStringExtra("EXTRA_USER_TV_NOM"));
-            this.modifPrenom.setText(intentFromProfil.getStringExtra("EXTRA_USER_TV_PRENOM"));
         }
         setDateTimeField();
         setModifPoids();
@@ -217,7 +213,6 @@ public class ProfilModif extends ActionBarActivity {
     public void confirmModifyUserProfile(View view) {
         intent = new Intent(this, Home.class);
         intent.putExtra(EXTRA_USER_MODIF_TAILLE, modifTaille.getText().toString());
-        intent.putExtra(EXTRA_USER_MODIF_PRENOM, modifPrenom.getText().toString());
         intent.putExtra(EXTRA_USER_MODIF_NOM, modifNom.getText().toString());
         intent.putExtra(EXTRA_USER_MODIF_POIDS, this.modifPoids.getText().toString());
         intent.putExtra(EXTRA_USER_MODIF_DATE_NAISSANCE, this.modifDateNaissance.getText().toString());
@@ -230,9 +225,9 @@ public class ProfilModif extends ActionBarActivity {
         if(isNetworkAvailable()){
             async_post();
             //si la connexion n'est pas disponible la prochaine fois que l'utilisateur retourne sur le profil alors les donnees seront recuperees dans le fichier
-            save_data_readWrite.saveDataProfilModifInFile(this.modifNom.getText().toString(),this.modifPrenom.getText().toString(),this.modifTaille.getText().toString(),this.modifPoids.getText().toString(),this.modifDateNaissance.getText().toString(),this.modifMail.getText().toString());
+            save_data_readWrite.saveDataProfilModifInFile(this.modifNom.getText().toString(),this.modifTaille.getText().toString(),this.modifPoids.getText().toString(),this.modifDateNaissance.getText().toString(),this.modifMail.getText().toString());
         }else{
-            save_data_readWrite.saveDataProfilModifInFile(this.modifNom.getText().toString(),this.modifPrenom.getText().toString(),this.modifTaille.getText().toString(),this.modifPoids.getText().toString(),this.modifDateNaissance.getText().toString(),this.modifMail.getText().toString());
+            save_data_readWrite.saveDataProfilModifInFile(this.modifNom.getText().toString(),this.modifTaille.getText().toString(),this.modifPoids.getText().toString(),this.modifDateNaissance.getText().toString(),this.modifMail.getText().toString());
         }
         startActivity(intent);
     }
@@ -247,8 +242,7 @@ public class ProfilModif extends ActionBarActivity {
                 this.modifDateNaissance.getText().toString(),
                 this.modifPoids.getText().toString(),
                 this.modifTaille.getText().toString(),
-                this.modifNom.getText().toString(),
-                this.modifPrenom.getText().toString()
+                this.modifNom.getText().toString()
         );
     }
     private boolean isNetworkAvailable() {
@@ -256,34 +250,5 @@ public class ProfilModif extends ActionBarActivity {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-
-    /**
-     * Permet de sauvegarder les donnees du profil dans un fichier texte pour les recuperer sans connexion(Dans Home.java)
-     */
-//    public void saveDataProfilModifInFile(){
-//        FileOutputStream fOut = null;
-//        OutputStreamWriter osw = null;
-//        this.deleteFile(FILENAME_PROFIL);
-//        try{
-//            fOut = this.openFileOutput(FILENAME_PROFIL, MODE_APPEND);
-//            osw = new OutputStreamWriter(fOut);
-//            String separator = System.getProperty("line.separator");
-//            osw.append("nom_" + this.modifNom.getText().toString());
-//            osw.append(separator);
-//            osw.append("prenom_" + this.modifPrenom.getText().toString());
-//            osw.append(separator);
-//            osw.append("taille_" + this.modifTaille.getText().toString());
-//            osw.append(separator);
-//            osw.append("poids_" + this.modifPoids.getText().toString());
-//            osw.append(separator);
-//            osw.append("dateNaissance_" + this.modifDateNaissance.getText().toString());
-//            osw.append(separator);
-//            osw.append("mail_" + this.modifMail.getText().toString());
-//            osw.close();
-//            fOut.close();
-//        }
-//        catch (Exception e) {
-//        }
-//    }
 
 }

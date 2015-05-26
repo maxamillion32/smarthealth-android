@@ -11,14 +11,10 @@ import com.androidquery.callback.AjaxStatus;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import website.watchmyhealth.watchmyhealth.fragment.FragmentProfil;
 
 /**
  * Created by Fabrice on 23/05/2015.
@@ -34,7 +30,7 @@ public class ServerSync {
         aq = new AQuery(this.context);
     }
 
-    public void async_get_profil(final TextView tvNom,final TextView tvPrenom,final TextView tvEmail,final TextView tvDateNaissance,final TextView tvTaille,final TextView tvPoids){
+    public void async_get_profil(final TextView tvNom,final TextView tvEmail,final TextView tvDateNaissance,final TextView tvTaille,final TextView tvPoids){
 
         //do a twiiter search with a http post
         String idUser = "&idUser=1201";
@@ -49,20 +45,18 @@ public class ServerSync {
                     JSONObject jsonObj = (JSONObject)json;
                     try {
                         String nom = (String)jsonObj.get("nom");
-                        String prenom = (String)jsonObj.get("prenom");
                         String mail = (String)jsonObj.get("mail");
                         String dateNaissance = (String)jsonObj.get("dateNaissance");
                         String taille = (String)jsonObj.get("taille");
                         String poids = (String)jsonObj.get("poids");
                         tvNom.setText(nom);
-                        tvPrenom.setText(prenom);
                         tvDateNaissance.setText(dateNaissance);
                         tvEmail.setText(mail);
                         tvPoids.setText(poids);
                         tvTaille.setText(taille);
                         //On enregistre les donnees du serveur sur le telephone pour le cas ou l'utilisateur n'est plus connectee
                         Save_Data_ReadWrite save_data_readWrite= new Save_Data_ReadWrite((Activity)context);
-                        save_data_readWrite.saveDataProfilModifInFile(nom,prenom,taille,poids,dateNaissance,mail);
+                        save_data_readWrite.saveDataProfilModifInFile(nom,taille,poids,dateNaissance,mail);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -98,7 +92,7 @@ public class ServerSync {
 
 
     }
-    public void async_post_modif_profil(String idUser,String modifMail,String modifDateNaissance,String modifPoids,String modifTaille,String modifNom,String modifPrenom){
+    public void async_post_modif_profil(String idUser,String modifMail,String modifDateNaissance,String modifPoids,String modifTaille,String modifNom){
         //do a twiiter search with a http post
         //Une appelle de methode d'Async_post pour chaque jour (la date), car il faut envoyer toutes les donnees d'un jour donne en meme temps
         Map<String, Object> params = new HashMap<String, Object>();
@@ -109,7 +103,6 @@ public class ServerSync {
         params.put("userPoids", modifPoids);
         params.put("userTaille", modifTaille);
         params.put("userNom", modifNom);
-        params.put("userPrenom",modifPrenom);
 
         String urlPost = this.urlPost + "/test";
         aq.ajax(urlPost, params, JSONObject.class, new AjaxCallback<JSONObject>() {

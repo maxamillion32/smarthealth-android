@@ -66,10 +66,13 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            TextView distance = (TextView) findViewById(R.id.tvDistance);
-            TextView vitesse = (TextView) findViewById(R.id.tvVitesse);
-            vitesse.setText(intent.getExtras().getString("vitesse")+" km/h");
-            distance.setText(intent.getExtras().getString("distance")+" m");
+            System.out.println("fragment.toString() ====="+fragment.toString());
+            if(fragment.getClass().toString().endsWith("FragmentHome")){
+                TextView distance = (TextView) findViewById(R.id.tvDistance);
+                TextView vitesse = (TextView) findViewById(R.id.tvVitesse);
+                vitesse.setText(intent.getExtras().getString("vitesse")+" km/h");
+                distance.setText(intent.getExtras().getString("distance")+" m");
+            }
         }
     };
 
