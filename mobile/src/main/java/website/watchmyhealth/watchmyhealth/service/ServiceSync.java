@@ -33,8 +33,8 @@ public class ServiceSync extends Service implements LocationListener{
     @Override
     public void onCreate() {
         locationMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000,0, this);
-        locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, this);
+        locationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000,15, this);
+        locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 15, this);
         super.onCreate();
     }
 
@@ -52,23 +52,20 @@ public class ServiceSync extends Service implements LocationListener{
 
     @Override
     public void onLocationChanged(Location location) {
-        double distanceTmp = 0;
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+        String strLatitude = Double.toString(latitude);
+        String strLongitude = Double.toString(longitude);
+        int vitesse = 0;
         if(locationTmp != null){
             distance += locationTmp.distanceTo(location);
-            distanceTmp =  locationTmp.distanceTo(location);
+            System.out.println("locationTmp.getSpeed()====" + locationTmp.getSpeed());
         }
         if(location!=null){
             locationTmp = new Location(location);
         }
 
-        Double latitude = location.getLatitude();
-        Double longitude = location.getLongitude();
-        location.distanceTo(location);
-        String strLatitude = Double.toString(latitude);
-        String strLongitude = Double.toString(longitude);
-        int vitesse = 0;
         Toast.makeText(getBaseContext(),"Latitude =" + latitude + " Longitude=" + longitude,Toast.LENGTH_LONG).show();
-
         try{
             fOut = this.openFileOutput(FILENAME_LOCATION, MODE_APPEND);
             osw = new OutputStreamWriter(fOut);

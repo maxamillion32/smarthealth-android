@@ -42,21 +42,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:inputType="textPersonName"
-                        android:text="Prénom"
-                        android:ems="10"
-                        android:id="@+id/modifPrenom"
-                        android:layout_gravity="left|bottom"
-                        android:hint="Prénom" />
-
-                    <EditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPersonName"
                         android:text="Nom"
                         android:ems="10"
                         android:id="@+id/modifNom"
                         android:layout_gravity="left|center_vertical"
-                        android:hint="Nom" />
+                        android:hint="Nom d&apos;utilisateur" />
 
                 </FrameLayout>
             </LinearLayout>

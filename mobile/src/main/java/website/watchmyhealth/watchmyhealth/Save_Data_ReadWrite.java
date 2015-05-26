@@ -27,7 +27,7 @@ public class Save_Data_ReadWrite {
         this.activity = activity;
     }
 
-    public void ReadSettingsProfil(TextView tvTaille,TextView tvPoids,TextView tvDateNaissance,TextView tvEmail,TextView tvNom,TextView tvPrenom){
+    public void ReadSettingsProfil(TextView tvTaille,TextView tvPoids,TextView tvDateNaissance,TextView tvEmail,TextView tvNom){
         FileInputStream fis = null;
         BufferedReader reader = null;
         try{
@@ -56,9 +56,6 @@ public class Save_Data_ReadWrite {
                     case "nom":
                         tvNom.setText(tmpStr[1]);
                         break;
-                    case "prenom":
-                        tvPrenom.setText(tmpStr[1]);
-                        break;
                 }
             }
             reader.close();
@@ -71,7 +68,7 @@ public class Save_Data_ReadWrite {
     /**
      * Permet de sauvegarder les donnees du profil dans un fichier texte pour les recuperer sans connexion(Dans Home.java)
      */
-    public void saveDataProfilModifInFile(String modifNom,String modifPrenom,String modifTaille,String modifPoids,String modifDateNaissance,String modifMail){
+    public void saveDataProfilModifInFile(String modifNom,String modifTaille,String modifPoids,String modifDateNaissance,String modifMail){
         FileOutputStream fOut = null;
         OutputStreamWriter osw = null;
         activity.deleteFile(FILENAME_PROFIL);
@@ -80,8 +77,6 @@ public class Save_Data_ReadWrite {
             osw = new OutputStreamWriter(fOut);
             String separator = System.getProperty("line.separator");
             osw.append("nom_" + modifNom);
-            osw.append(separator);
-            osw.append("prenom_" + modifPrenom);
             osw.append(separator);
             osw.append("taille_" + modifTaille);
             osw.append(separator);

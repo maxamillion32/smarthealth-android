@@ -131,7 +131,7 @@ public class ConnectionChangeReceiver extends BroadcastReceiver
                     reader = new BufferedReader(new InputStreamReader(fis));
                     String strLine = "";
                     String[] tmpStr;
-                    String taille="",poids="",dateNaissance="",mail="",nom="",prenom ="";
+                    String taille="",poids="",dateNaissance="",mail="",nom="";
                     while ((strLine = reader.readLine()) != null) {
                         System.out.println("ReadSettings Receiver ======= "+strLine);
                         tmpStr = strLine.split("_");
@@ -152,15 +152,12 @@ public class ConnectionChangeReceiver extends BroadcastReceiver
                             case "nom":
                                  nom = tmpStr[1];
                                 break;
-                            case "prenom":
-                                 prenom = tmpStr[1];
-                                break;
                         }
                     }
                     reader.close();
                     fis.close();
                     String idUser = "1201";
-                    System.out.println("Dedans FILENAME_PROFIL =" + taille + " " + poids + " " + dateNaissance + " " + mail + " " + nom + " " + prenom);
+                    System.out.println("Dedans FILENAME_PROFIL =" + taille + " " + poids + " " + dateNaissance + " " + mail + " " + nom );
                     context.deleteFile(FILENAME_PROFIL);
 
                     ServerSync serverSync = new ServerSync(context);
@@ -170,8 +167,7 @@ public class ConnectionChangeReceiver extends BroadcastReceiver
                             dateNaissance,
                             poids,
                             taille,
-                            nom,
-                            prenom
+                            nom
                     );
                 }
                 catch (Exception e) {
