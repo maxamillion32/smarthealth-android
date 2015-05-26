@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/C:/Users/Fabrice/Documents/GitHub/SmartHealth%2D%2D-Android-App/ParseLoginUI/res/values/colors.xml -->
+    <!-- From: file:/C:/Users/Yoann/Documents/SmartHealth%2D%2D-Android-App/ParseLoginUI/res/values/colors.xml -->
     <eat-comment/>
     <color name="com_parse_ui_facebook_login_button">#3B5998</color>
     <color name="com_parse_ui_facebook_login_button_focus">#304F8B</color>
@@ -16,7 +16,7 @@
     <color name="com_parse_ui_twitter_login_button">#2DAAE2</color>
     <color name="com_parse_ui_twitter_login_button_focus">#2788BE</color>
     <color name="com_parse_ui_twitter_login_button_push">#2588B5</color>
-    <!-- From: file:/C:/Users/Fabrice/Documents/GitHub/SmartHealth%2D%2D-Android-App/ParseLoginUI/res/values/dimens.xml -->
+    <!-- From: file:/C:/Users/Yoann/Documents/SmartHealth%2D%2D-Android-App/ParseLoginUI/res/values/dimens.xml -->
     <eat-comment/>
     <dimen name="com_parse_ui_horizontal_margin">16dp</dimen>
     <dimen name="com_parse_ui_large_vertical_spacing">24dp</dimen>
@@ -25,7 +25,7 @@
     <dimen name="com_parse_ui_vertical_margin">16dp</dimen>
     <dimen name="com_parse_ui_vertical_spacing">16dp</dimen>
     <dimen name="com_parse_ui_xlarge_vertical_spacing">36dp</dimen>
-    <!-- From: file:/C:/Users/Fabrice/Documents/GitHub/SmartHealth%2D%2D-Android-App/ParseLoginUI/res/values/strings.xml -->
+    <!-- From: file:/C:/Users/Yoann/Documents/SmartHealth%2D%2D-Android-App/ParseLoginUI/res/values/strings.xml -->
     <eat-comment/>
     <plurals name="com_parse_ui_password_too_short_toast">
         <item quantity="one">Le mot de passe doit avoir au moins %d caractère</item>
@@ -81,7 +81,7 @@
     <string name="com_parse_ui_twitter_login_failed_toast">Connexion à Twitter échouée</string>
     <string name="com_parse_ui_username_input_hint">Pseudonyme / Email</string>
     <string name="com_parse_ui_username_taken_toast">Nom d\'utilisateur déjà existant, veuillez en choisir un autre</string>
-    <!-- From: file:/C:/Users/Fabrice/Documents/GitHub/SmartHealth%2D%2D-Android-App/ParseLoginUI/res/values/styles.xml -->
+    <!-- From: file:/C:/Users/Yoann/Documents/SmartHealth%2D%2D-Android-App/ParseLoginUI/res/values/styles.xml -->
     <eat-comment/>
     <style name="ParseLoginUI"/>
     <style name="ParseLoginUI.Button" parent="@android:style/Widget.Button">

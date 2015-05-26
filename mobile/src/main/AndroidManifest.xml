@@ -39,8 +39,7 @@
         android:name=".SampleApplication">
         <service android:name=".service.ServiceSync"/>
         <activity
-            android:name=".activity.Home"
-            android:screenOrientation="portrait"
+            android:name=".activity.ParseProfileActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop">
             <intent-filter>
@@ -94,6 +93,11 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.Home"/>
         </activity>
+        <activity
+            android:name=".activity.Home"
+            android:screenOrientation="portrait"
+            android:label="@string/navigation_accueil" >
+        </activity>
         <!--<activity
             android:name=".activity.LoginActivity"
             android:label="@string/title_activity_login" >
@@ -106,8 +110,10 @@
 
         <!-- JOHANN -->
         <!--<meta-data-->
-            <!--android:name="com.google.android.maps.v2.API_KEY"-->
-            <!--android:value="AIzaSyDcgC7y1UR5cDnEXrsfk4eVH1dLpwv-11U" />-->
+        <!--android:name="com.google.android.maps.v2.API_KEY"-->
+        <!--android:value="AIzaSyDcgC7y1UR5cDnEXrsfk4eVH1dLpwv-11U" />-->
     </application>
 
 </manifest>
+
+

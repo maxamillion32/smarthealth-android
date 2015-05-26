@@ -36,6 +36,7 @@ import java.io.InputStreamReader;
 import website.watchmyhealth.watchmyhealth.ConnectionChangeReceiver;
 import website.watchmyhealth.watchmyhealth.NavigationDrawerFragment;
 import website.watchmyhealth.watchmyhealth.R;
+import website.watchmyhealth.watchmyhealth.fragment.FragmentAPropos;
 import website.watchmyhealth.watchmyhealth.fragment.FragmentMap;
 import website.watchmyhealth.watchmyhealth.fragment.FragmentProfil;
 import website.watchmyhealth.watchmyhealth.fragment.FragmentHome;
@@ -137,6 +138,10 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
             case 2: //attention, si on change de "case" pour FragmentProfil, le mappage ne se fera plus entre ProfilModif et FragmentProfil ctrl+f = GO_TO_FRAGMENT_PROFIL
                 fragment = new FragmentProfil();
                 mTitle = getString(R.string.navigation_profil);
+                break;
+            case 3: //attention, si on change de "case" pour FragmentProfil, le mappage ne se fera plus entre ProfilModif et FragmentProfil ctrl+f = GO_TO_FRAGMENT_PROFIL
+                fragment = new FragmentAPropos();
+                mTitle = getString(R.string.navigation_a_propos);
                 break;
 
         }
