@@ -23,13 +23,13 @@ android {
 dependencies {
 /* For PARSELOGINUI */
     // Module dependency on ParseLoginUI library sources
-    compile project(':ParseLoginUI')
+    //compile project(':ParseLoginUI')
 
 
     // If your app's project does not have the Parse Android SDK already, copy it into your
     // project at YOUR_PROJECT_LIBS_PATH.
-        compile files('C:\\Users\\Yoann\\Documents\\SmartHealth---Android-App\\.idea\\libraries\\Parse-1.9.1.jar')
-        compile files('C:\\Users\\Yoann\\Documents\\SmartHealth---Android-App\\.idea\\libraries\\ParseFacebookUtilsV4-1.9.1.jar')
+      //  compile files('/libraries/Parse-1.9.1.jar')
+       // compile files('/libraries/ParseFacebookUtilsV4-1.9.1.jar')
 
     // Uncomment if using Facebook Login (optional Maven dependency)
 
