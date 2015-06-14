@@ -22,27 +22,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Chronometer;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.androidquery.AQuery;
-
-import org.w3c.dom.Text;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 
 import website.watchmyhealth.watchmyhealth.ConnectionChangeReceiver;
 import website.watchmyhealth.watchmyhealth.NavigationDrawerFragment;
 import website.watchmyhealth.watchmyhealth.R;
 import website.watchmyhealth.watchmyhealth.fragment.FragmentAPropos;
+import website.watchmyhealth.watchmyhealth.fragment.FragmentHome;
 import website.watchmyhealth.watchmyhealth.fragment.FragmentMap;
 import website.watchmyhealth.watchmyhealth.fragment.FragmentProfil;
-import website.watchmyhealth.watchmyhealth.fragment.FragmentHome;
 import website.watchmyhealth.watchmyhealth.service.ServiceSync;
 
 
@@ -59,9 +49,14 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
     private CharSequence mTitle;
     private TextView mTextViewHeart;
     private TextView mTextViewStep;
+    private String activiteEnCours = "marche";
     Fragment fragment;
     private ConnectionChangeReceiver packageReceiver;
     FragmentManager fragmentManager;
+    private int start_nbPas = 0;
+    private int end_nbPas = 0;
+    private boolean firstPas = false;
+
     private BroadcastReceiver uiUpdated= new BroadcastReceiver() {
 
         @Override
@@ -80,11 +75,20 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if(mTextViewStep!=null)
-                mTextViewStep.setText(Integer.toString(DataLayerListenerService.getCurrentValueStep()));
+            if(mTextViewStep!=null){
+                if(firstPas == false) {
+                    start_nbPas = DataLayerListenerService.getCurrentValueStep();
+                    if(start_nbPas != 0) {
+                        firstPas = true;
+                    }
+                }
+                System.out.println(start_nbPas);
+                mTextViewStep.setText(Integer.toString(DataLayerListenerService.getCurrentValueStep()-start_nbPas));
+            }
 
-            if(mTextViewHeart!=null)
+            if(mTextViewHeart!=null) {
                 mTextViewHeart.setText(Integer.toString(DataLayerListenerService.getCurrentValueHeart()));
+            }
         }
     };
 
@@ -93,11 +97,15 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Intent intent = getIntent();
+        if( intent.getExtras()!= null){
+            System.out.println("intent.getExtras() != null");
 
-        if( intent.getExtras() !=null){
+            if(intent.getExtras().containsKey("GO_TO_FRAGMENT_PROFIL") ) {
+                System.out.println("GO_TO_FRAGMENT_PROFIL existe");
                 //Si on est sur l'activity ProfilModif et qu'on sauvegarde les modifications on doit retourner sur le FragmentProfil et non dans la page Home , on transmet donc cette info via cet Intent
                 onNavigationDrawerItemSelected(intent.getIntExtra("GO_TO_FRAGMENT_PROFIL", 2));
-                intent.getExtras().remove("GO_TO_FRAGMENT_PROFIL");
+                intent.removeExtra("GO_TO_FRAGMENT_PROFIL");
+            }
         }
         else{
             packageReceiver= new ConnectionChangeReceiver();
@@ -167,6 +175,30 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
     }
 
 
+    public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.radioButton:
+                if (checked)
+                    // Marche
+                    activiteEnCours="marche";
+                    break;
+            case R.id.radioButton2:
+                if (checked)
+                    // Course
+                    activiteEnCours="course";
+                    break;
+            case R.id.radioButton3:
+                if (checked)
+                    // Velo
+                    activiteEnCours="velo";
+                    break;
+        }
+    }
+
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
@@ -206,15 +238,24 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
     public void startChronometer(View view) {
         LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
         //Permet de demarrer le service qui va recuperer la geolocalisation
-        packageReceiver.onReceive(this,new Intent().setAction("activityStarted"));
+        if(packageReceiver == null){
+            packageReceiver= new ConnectionChangeReceiver();
+            registerReceiver(packageReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
+        }
 
         if(!manager.isProviderEnabled( LocationManager.GPS_PROVIDER )){
             createGpsDisabledAlert();
+            packageReceiver.onReceive(this, new Intent().setAction("activityStarted"));
+
         }
         else{
             this.startService(new Intent(Home.this, ServiceSync.class));
+            packageReceiver.onReceive(this, new Intent().setAction("activityStarted"));
+
         }
+        resetChronometer(view);
         ((Chronometer) findViewById(R.id.chronometer1)).setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
+        ((Chronometer) findViewById(R.id.chronometer1)).start();
 
         Toast.makeText(this,"Debut de la seance de sport",Toast.LENGTH_LONG).show();
         mTextViewHeart = (TextView) findViewById(R.id.heartbeat);
@@ -227,17 +268,23 @@ public class Home extends ActionBarActivity implements NavigationDrawerFragment.
         timeWhenStopped = ((Chronometer) findViewById(R.id.chronometer1)).getBase() - SystemClock.elapsedRealtime();
         ((Chronometer) findViewById(R.id.chronometer1)).stop();
         //Permet d'arreter le service qui recupere la geolocalisation
+
         this.stopService(new Intent(this, ServiceSync.class));
+        Intent intentStop= new Intent();
+        intentStop.setAction("activityFinished");
+        intentStop.putExtra("typeActivity", activiteEnCours);
+        this.end_nbPas= Integer.parseInt(mTextViewStep.getText().toString());
+        packageReceiver.setStartPasEndPas(this.start_nbPas,this.end_nbPas);
         //Si la connexion internet est activee quand on arrete le service, on envoi les donnees et on supprime le fichier de geolocalisation sur le mobile
         if(this.isNetworkAvailable()){
-            packageReceiver.onReceive(this, new Intent().setAction("activityFinished"));
-
+            packageReceiver.onReceive(this, intentStop);
         }
         else{
             //permet d'indiquer au receiver que l'activite est finie, a la prochaine connexion, le serveur recevra les donnees
-            packageReceiver.onReceive(this,new Intent().setAction("activityFinished"));
+            packageReceiver.onReceive(this,intentStop);
         }
         Toast.makeText(this, "Fin de la seance de sport", Toast.LENGTH_LONG).show();
+        firstPas = false;
         DataLayerListenerService.setHandler(null);
     }
 

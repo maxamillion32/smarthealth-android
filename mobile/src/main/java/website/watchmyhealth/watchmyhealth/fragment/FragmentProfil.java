@@ -4,23 +4,13 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.app.Fragment;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
-import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxCallback;
-import com.androidquery.callback.AjaxStatus;
-import org.json.JSONException;
-import org.json.JSONObject;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Date;
+
 import website.watchmyhealth.watchmyhealth.R;
 import website.watchmyhealth.watchmyhealth.Save_Data_ReadWrite;
 import website.watchmyhealth.watchmyhealth.ServerSync;
@@ -54,13 +44,18 @@ public class FragmentProfil extends Fragment {
         tvPoids=(TextView)view.findViewById(R.id.tvPoids);
         imageButton = (ImageButton) view.findViewById(R.id.imageButton);
         setImageButtonProfilModif();
-        if(isNetworkAvailable()){
+        Intent intentFromProfilModif = getActivity().getIntent();
+        if(isNetworkAvailable() && intentFromProfilModif.getExtras() !=null){
+            Save_Data_ReadWrite save_data_readWrite= new Save_Data_ReadWrite(this.getActivity());
+            save_data_readWrite.ReadSettingsProfil(this.tvTaille, this.tvPoids, this.tvDateNaissance, this.tvEmail, this.tvNom);
+
+        }
+        else if(isNetworkAvailable()){
             getInformationsFromServeur();
         }else{
             Save_Data_ReadWrite save_data_readWrite= new Save_Data_ReadWrite(this.getActivity());
             save_data_readWrite.ReadSettingsProfil(this.tvTaille,this.tvPoids,this.tvDateNaissance,this.tvEmail,this.tvNom);
         }
-        Intent intentFromProfilModif = getActivity().getIntent();
         if( intentFromProfilModif.getExtras() !=null) {
             tvEmail.setText(intentFromProfilModif.getStringExtra("EXTRA_USER_MODIF_EMAIL"));
             tvDateNaissance.setText(intentFromProfilModif.getStringExtra("EXTRA_USER_MODIF_DATE_NAISSANCE"));
@@ -97,8 +92,5 @@ public class FragmentProfil extends Fragment {
             }
         });
     }
-
-
-
 
 }

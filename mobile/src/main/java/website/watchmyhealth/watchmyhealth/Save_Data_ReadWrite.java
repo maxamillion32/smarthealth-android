@@ -20,6 +20,7 @@ import website.watchmyhealth.watchmyhealth.activity.ProfilModif;
  */
 public class Save_Data_ReadWrite {
     private final String FILENAME_PROFIL = "settings_profil.dat";
+    private final String FILENAME_LOGIN = "settings_login.dat";
     private final String FILENAME_LOCATION ="save_Time_Longitude_Latitude.dat";
     private Service service;
     private Activity activity;
@@ -91,6 +92,49 @@ public class Save_Data_ReadWrite {
         catch (Exception e) {
         }
     }
+
+
+
+    public String ReadLoginProfil(){
+        FileInputStream fis = null;
+        BufferedReader reader = null;
+        String libelle = "";
+        try{
+            fis = activity.openFileInput(FILENAME_LOGIN);
+            reader = new BufferedReader(new InputStreamReader(fis));
+            String strLine = "";
+            String[] tmpStr;
+            while ((strLine = reader.readLine()) != null) {
+                System.out.println("DEPUIS LE FICHIER ENREGISTRE POUR RECUPERE LIDENTIFIANT ======= "+strLine);
+                tmpStr = strLine.split("_");
+                libelle = tmpStr[1];
+            }
+            reader.close();
+            fis.close();
+        }
+        catch (Exception e) {
+        }
+        return libelle;
+    }
+    /**
+     * Permet de sauvegarder l'identifiant utilisateur dans un fichier texte pour les recuperer sans connexion(Dans Home.java)
+     */
+    public void saveDataLoginInFile(String id){
+        FileOutputStream fOut = null;
+        OutputStreamWriter osw = null;
+        activity.deleteFile(FILENAME_LOGIN);
+        try{
+            fOut = activity.openFileOutput(FILENAME_LOGIN, activity.MODE_APPEND);
+            osw = new OutputStreamWriter(fOut);
+            osw.append("identifiant_" + id);
+            osw.close();
+            fOut.close();
+        }
+        catch (Exception e) {
+        }
+    }
+
+
     public void write_location(String strLongitude,String strLatitude){
 
     }

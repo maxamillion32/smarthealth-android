@@ -234,10 +234,8 @@ public class ProfilModif extends ActionBarActivity {
 
     public void async_post(){
         ServerSync serverSync = new ServerSync(this);
-        String idUser = "1201";
         //Une appelle de methode d'Async_post pour chaque jour (la date), car il faut envoyer toutes les donnees d'un jour donne en meme temps
         serverSync.async_post_modif_profil(
-                idUser,
                 this.modifMail.getText().toString(),
                 this.modifDateNaissance.getText().toString(),
                 this.modifPoids.getText().toString(),
@@ -251,4 +249,9 @@ public class ProfilModif extends ActionBarActivity {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+    }
 }

@@ -160,19 +160,50 @@
                 android:textSize="25dp"
                 android:layout_column="1" />
         </TableRow>
+        <RadioGroup
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="50dp">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Marche"
+                android:id="@+id/radioButton"
+                android:checked="true"
+                android:onClick="onRadioButtonClicked" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Course"
+                android:id="@+id/radioButton2"
+                android:checked="false"
+                android:onClick="onRadioButtonClicked" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Velo"
+                android:id="@+id/radioButton3"
+                android:checked="false"
+                android:onClick="onRadioButtonClicked" />
+
+        </RadioGroup>
 
     </TableLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="248dp"
+        android:layout_height="180dp"
         android:weightSum="1">
 
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="259dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:id="@+id/layou"
             android:weightSum="1"
             android:gravity="center_vertical|center_horizontal">
@@ -185,7 +216,8 @@
                 android:onClick="startChronometer"
                 android:src="@drawable/play_icon"
                 android:contentDescription="ok"
-                android:layout_marginLeft="25dp" />
+                android:layout_marginLeft="25dp"
+                android:background="#00ffffff" />
 
             <ImageButton
                 android:id="@+id/button2"
@@ -194,7 +226,8 @@
                 android:text="Stop"
                 android:onClick="stopChronometer"
                 android:src="@drawable/stop_icon"
-                android:layout_marginLeft="25dp" />
+                android:layout_marginLeft="25dp"
+                android:background="#00ffffff" />
 
         </LinearLayout>
 

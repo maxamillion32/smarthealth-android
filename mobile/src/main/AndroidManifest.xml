@@ -30,54 +30,23 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        android:name=".SampleApplication">
+        android:theme="@style/AppTheme">
+        <!-- android:name=".activity.Home">-->
         <service android:name=".service.ServiceSync"/>
-        <activity
-            android:name=".activity.ParseProfileActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTop">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
         <service android:name=".activity.DataLayerListenerService" >
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
             </intent-filter>
         </service>
-        <activity
-            android:name="com.parse.ui.ParseLoginActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTop">
-            <meta-data
-                android:name="com.parse.ui.ParseLoginActivity.PARSE_LOGIN_ENABLED"
-                android:value="true"/>
-            <meta-data
-                android:name="com.parse.ui.ParseLoginActivity.PARSE_LOGIN_EMAIL_AS_USERNAME"
-                android:value="true"/>
-            <meta-data
-                android:name="com.parse.ui.ParseLoginActivity.FACEBOOK_LOGIN_ENABLED"
-                android:value="true"/>
-            <meta-data
-                android:name="com.parse.ui.ParseLoginActivity.TWITTER_LOGIN_ENABLED"
-                android:value="true"/>
-        </activity>
-        <activity android:name="com.facebook.FacebookActivity"
-            android:configChanges=
-                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:label="@string/app_name" />
-        <meta-data
-            android:name="com.parse.APPLICATION_ID"
-            android:value="@string/parse_app_id" />
-        <meta-data
-            android:name="com.parse.CLIENT_KEY"
-            android:value="@string/parse_client_key" />
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
+        <!--<activity
+            android:name=".activity.LoginPwd"
+            android:label="@string/app_name">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>-->
         <activity
             android:name=".activity.ProfilModif"
             android:uiOptions="splitActionBarWhenNarrow"
@@ -87,9 +56,20 @@
                 android:value=".activity.Home"/>
         </activity>
         <activity
+            android:name=".activity.LoginPwd">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".activity.Home"
             android:screenOrientation="portrait"
             android:label="@string/navigation_accueil" >
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
         </activity>
         <!--<activity
             android:name=".activity.LoginActivity"
@@ -103,4 +83,3 @@
         <!--android:value="AIzaSyDcgC7y1UR5cDnEXrsfk4eVH1dLpwv-11U" />-->
     </application>
 </manifest>
-

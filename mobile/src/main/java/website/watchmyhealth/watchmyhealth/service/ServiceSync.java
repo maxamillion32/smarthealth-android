@@ -4,7 +4,6 @@ package website.watchmyhealth.watchmyhealth.service;
  * Created by Fabrice on 17/05/2015.
  */
 
-import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +16,8 @@ import android.widget.Toast;
 
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+
+import website.watchmyhealth.watchmyhealth.activity.DataLayerListenerService;
 
 
 public class ServiceSync extends Service implements LocationListener{
@@ -33,8 +34,10 @@ public class ServiceSync extends Service implements LocationListener{
     @Override
     public void onCreate() {
         locationMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000,15, this);
-        locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 15, this);
+        //permet de se geolocaliser avec la wifi ou 3g utile pour developper
+        //locationMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, this);
+
+        locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);
         super.onCreate();
     }
 
@@ -52,6 +55,7 @@ public class ServiceSync extends Service implements LocationListener{
 
     @Override
     public void onLocationChanged(Location location) {
+
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
         String strLatitude = Double.toString(latitude);
@@ -60,6 +64,7 @@ public class ServiceSync extends Service implements LocationListener{
         if(locationTmp != null){
             distance += locationTmp.distanceTo(location);
             System.out.println("locationTmp.getSpeed()====" + locationTmp.getSpeed());
+
         }
         if(location!=null){
             locationTmp = new Location(location);
@@ -79,15 +84,16 @@ public class ServiceSync extends Service implements LocationListener{
             }
             else{
                 double time = (System.currentTimeMillis()- startActivityTimeStamp)/3600;
-                System.out.println((System.currentTimeMillis()- startActivityTimeStamp)+" =====Timestamp - Timestamp ========"+time);
-                System.out.println("distanceKm ==="+distance);
                 vitesse = (int)(distance/time);
-                System.out.println("vitesse ==="+vitesse);
-
+                if(vitesse>300000){
+                    vitesse=0;
+                }
                 broadcastValueVitesse = Integer.toString(vitesse);
-                System.out.println("broadcastValueVitesse ===== "+broadcastValueVitesse);
             }
-            osw.append(System.currentTimeMillis()+"_" + strLongitude+"_"+strLatitude+"_"+distance+"_"+vitesse);
+            String nbPas = Integer.toString(DataLayerListenerService.getCurrentValueStep());
+            String heartRate = Integer.toString(DataLayerListenerService.getCurrentValueHeart());
+            System.out.println("Heart RATE =============== "+heartRate);
+            osw.append(System.currentTimeMillis() + "_" + strLongitude + "_" + strLatitude + "_" + distance + "_" + vitesse + "_" + nbPas +"_"+heartRate);
 
 
             osw.append(separator);
