@@ -2,21 +2,22 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" tools:context=".HomeWatch" tools:deviceIds="wear_round"
-    android:background="#ff3399ff">
+    android:background="@drawable/bg_wear">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/stepcount"
-        android:layout_centerHorizontal="true"
         android:textStyle="bold"
         android:textSize="50dp"
         android:textIsSelectable="true"
-        android:layout_alignParentBottom="true"
         android:autoText="false"
         android:gravity="center_vertical|center_horizontal"
         android:text="76"
-        android:layout_below="@+id/heartbeat" />
+        android:textColor="#c80000"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="19dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -31,5 +32,6 @@
         android:layout_gravity="bottom|center_horizontal"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="49dp" />
+        android:layout_marginStart="49dp"
+        android:visibility="invisible" />
 </RelativeLayout>
